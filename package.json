@@ -1,0 +1,50 @@
+{
+  "name": "generic-merkle-dag",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "coverage": "istanbul cover ./test/index.js",
+    "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
+    "lint": "standard",
+    "test": "npm run test:node && npm run test:browser",
+    "test:browser": "karma start karma.conf.js",
+    "test:node": "tape ./test/index.js",
+    "build:docs": "documentation --github  -f md ./index.js > ./docs/index.md"
+  },
+  "keywords": [
+    "merkle",
+    "trie",
+    "dag"
+  ],
+  "author": "mjbecze <mjbecze@gmail.com>",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "imperative-trie": "^0.0.0",
+    "levelup": "^1.3.3",
+    "memdown": "^1.2.2"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "coveralls": "^2.11.4",
+    "documentation": "^3.0.4",
+    "istanbul": "^0.4.1",
+    "karma": "^0.13.15",
+    "karma-browserify": "^5.0.0",
+    "karma-detect-browsers": "^2.0.2",
+    "karma-env-preprocessor": "^0.1.1",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-tap": "^1.0.3",
+    "level": "^1.4.0",
+    "standard": "^5.2.2",
+    "tape": "^4.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
+}
