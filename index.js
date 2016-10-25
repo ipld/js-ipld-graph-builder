@@ -35,7 +35,7 @@ module.exports = class Vertex {
   }
 
   /**
-   * @return {String} the hash of this vertex
+   * @return {string} the hash of this vertex
    */
   hash () {
     return Vertex.toBuffer(this)
@@ -96,7 +96,7 @@ module.exports = class Vertex {
   /**
    * deletes an Edge at the end of given path
    * @param {Array} path
-   * @return {Boolean} Whether or not anything was deleted
+   * @return {boolean} Whether or not anything was deleted
    */
   del (path) {
     this._cache.del(path)
