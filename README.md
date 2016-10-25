@@ -15,7 +15,7 @@ A merkle trie implemention that if focused on being generic and fast
 ```javascript
   const Vertex = require('merkle-trie')
   const Store = require('merkle-trie/store.js')
-  let newVertex = new Vertex({store: store})
+  const newVertex = new Vertex({store: store})
   const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
   const value = 'all that is gold does not glitter'
 
