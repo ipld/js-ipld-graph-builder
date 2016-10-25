@@ -35,7 +35,8 @@ A merkle trie implemention that if focused on being generic and fast
 `npm run tests`
 
 # API
-[./docs/](./docs/index.md)
+ - [Vertex](./docs/vertex.md)  
+ - [Store](./docs/store.md)
 
 # LICENSE
 [MPL-2.0](https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2))
