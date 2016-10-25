@@ -2,7 +2,7 @@
 
 # constructor
 
-[store.js:14-17](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/store.js#L14-L17 "Source code on GitHub")
+[store.js:14-17](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/store.js#L14-L17 "Source code on GitHub")
 
 Store for merkle tries
 
@@ -13,7 +13,7 @@ Store for merkle tries
 
 # set
 
-[store.js:24-31](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/store.js#L24-L31 "Source code on GitHub")
+[store.js:24-31](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/store.js#L24-L31 "Source code on GitHub")
 
 Stores a vertex in the db, returning its merkle link
 
@@ -26,7 +26,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 # get
 
-[store.js:39-44](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/store.js#L39-L44 "Source code on GitHub")
+[store.js:39-44](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/store.js#L39-L44 "Source code on GitHub")
 
 Fetches a Vertex from the db
 
@@ -39,7 +39,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 # getLink
 
-[store.js:68-81](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/store.js#L68-L81 "Source code on GitHub")
+[store.js:68-81](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/store.js#L68-L81 "Source code on GitHub")
 
 resolves a merkle link to a Vertex
 
@@ -51,7 +51,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 # batch
 
-[store.js:88-136](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/store.js#L88-L136 "Source code on GitHub")
+[store.js:88-136](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/store.js#L88-L136 "Source code on GitHub")
 
 flush a cache trie to the db returning a promise that resolves to a merkle link
 
@@ -64,7 +64,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 # createReadStream
 
-[store.js:143-145](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/store.js#L143-L145 "Source code on GitHub")
+[store.js:143-145](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/store.js#L143-L145 "Source code on GitHub")
 
 Creates a read stream returning all the Vertices in a trie given a root merkle link
 
@@ -76,7 +76,7 @@ Returns **ReadStream**
 
 # constructor
 
-[index.js:14-20](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L14-L20 "Source code on GitHub")
+[index.js:14-20](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L14-L20 "Source code on GitHub")
 
 Create a new vertex
 
@@ -89,19 +89,19 @@ Create a new vertex
 
 # toBuffer
 
-[index.js:25-27](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L25-L27 "Source code on GitHub")
+[index.js:25-27](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L25-L27 "Source code on GitHub")
 
 Returns **[Buffer](https://nodejs.org/api/buffer.html)** the serialized Vertex
 
 # hash
 
-[index.js:40-42](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L40-L42 "Source code on GitHub")
+[index.js:40-42](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L40-L42 "Source code on GitHub")
 
-Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the hash of this vertex
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the hash of this vertex
 
 # isEmpty
 
-[index.js:68-70](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L68-L70 "Source code on GitHub")
+[index.js:68-70](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L68-L70 "Source code on GitHub")
 
 **Properties**
 
@@ -109,7 +109,7 @@ Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 
 # isLeaf
 
-[index.js:75-77](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L75-L77 "Source code on GitHub")
+[index.js:75-77](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L75-L77 "Source code on GitHub")
 
 **Properties**
 
@@ -117,7 +117,7 @@ Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 
 # set
 
-[index.js:84-94](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L84-L94 "Source code on GitHub")
+[index.js:84-94](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L84-L94 "Source code on GitHub")
 
 Set an edge on a given path to the given vertex
 
@@ -129,7 +129,7 @@ Set an edge on a given path to the given vertex
 
 # del
 
-[index.js:101-103](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L101-L103 "Source code on GitHub")
+[index.js:101-103](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L101-L103 "Source code on GitHub")
 
 deletes an Edge at the end of given path
 
@@ -137,11 +137,11 @@ deletes an Edge at the end of given path
 
 -   `path` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not anything was deleted
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not anything was deleted
 
 # get
 
-[index.js:110-132](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L110-L132 "Source code on GitHub")
+[index.js:110-132](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L110-L132 "Source code on GitHub")
 
 get a vertex given a path
 
@@ -153,7 +153,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 # update
 
-[index.js:144-171](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L144-L171 "Source code on GitHub")
+[index.js:144-171](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L144-L171 "Source code on GitHub")
 
 Updates an edge on a given path . If the path does not already exist this
 will extend the path. If no value is returned then the vertex that did exist will be deleted
@@ -174,7 +174,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 # flush
 
-[index.js:177-179](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L177-L179 "Source code on GitHub")
+[index.js:177-179](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L177-L179 "Source code on GitHub")
 
 flush the cache of saved operation to the store
 
@@ -182,7 +182,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 # copy
 
-[index.js:186-194](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L186-L194 "Source code on GitHub")
+[index.js:186-194](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L186-L194 "Source code on GitHub")
 
 creates a copy of the merkle trie. Work done on this copy will not affect
 the original.
@@ -191,7 +191,7 @@ Returns **Vertex**
 
 # fromBuffer
 
-[index.js:53-63](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/index.js#L53-L63 "Source code on GitHub")
+[index.js:53-63](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/index.js#L53-L63 "Source code on GitHub")
 
 unserialize a Vertex
 
@@ -203,10 +203,10 @@ Returns **Vertex**
 
 # constructor
 
-[link.js:6-8](https://github.com/wanderer/merkle-trie/blob/8d4d18097c1fdfa350400da3667dc446d236243a/link.js#L6-L8 "Source code on GitHub")
+[link.js:6-8](https://github.com/wanderer/merkle-trie/blob/22ca19ecb5473eab38ace8e885625e288c7adf06/link.js#L6-L8 "Source code on GitHub")
 
 a merkle link
 
 **Parameters**
 
--   `hash` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the hash of the merkle link
+-   `hash` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the hash of the merkle link
