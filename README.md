@@ -15,6 +15,7 @@ A merkle trie implemention that if focused on being generic and fast
 ```javascript
   const Vertex = require('merkle-trie')
   const Store = require('merkle-trie/store.js')
+  const store = new Store()
   const newVertex = new Vertex({store: store})
   const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
   const value = 'all that is gold does not glitter'
@@ -22,12 +23,18 @@ A merkle trie implemention that if focused on being generic and fast
   newVertex.set(path, new Vertex({value: value}))
   newVertex.get(path)
   .then(vertex => {
-    // retrieves the vertex that was stored
+      // retrieves the vertex that was stored
     newVertex.del(path)
   })
   .flush(link => {
     // saves all the work done on the trie to the store
     // and return the merkle link to the root vertex
+    return link
+  }).then(link => {
+    // get the vertex from the store
+    return store.getLink(link)
+  }).then(vertex => {
+    vertex // the vertex returned from the store  
   })
 ```
 
