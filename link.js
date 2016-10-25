@@ -1,7 +1,9 @@
 module.exports = class Link {
-  constuctor (hash) {
+  constructor (hash) {
     this.hash = hash
   }
 
-  toJSON () {}
+  toBuffer () {
+    return this.hash
+  }
 }

@@ -1,172 +1,152 @@
-const CacheVertex = require('imperative-trie')
-const Levelup = require('level')
+const ipld = require('ipld')
+const multicodec = require('multicodec')
+const CacheVertex = require('./cache.js')
 const Link = require('./link.js')
-const Readable = require('./readStream.js')
 
-const Vertex = module.exports = class Vertex {
+module.exports = class Vertex {
   /**
    * Create a new vertex
    * @param {*} value the value that the vertex holds
    * @param {Map} edges the edges that this vertex has stored a `Map` edge name => `Vertex`
    */
-  constructor (value, edges = new Map(), store = new Levelup('', {db: require('memdown')}), cache = new CacheVertex()) {
-    this._value = value
-    this._edges = edges
-    this._store = store
-    this._cache = cache
+  constructor (opts = {}) {
+    this.value = opts.value
+    this.edges = opts.edges || new Map()
+    this._store = opts.store
+    this._cache = opts.cache || new CacheVertex()
+    this._cache.vertex = this
+  }
+
+  // returns new state root hash
+  toBuffer () {
+    return Vertex.toBuffer(this)
+  }
+
+  static toBuffer (vertex) {
+    const edges = [...vertex.edges].map(item => {
+      item[1] = item[1].toBuffer()
+      return item
+    })
+    return multicodec.addPrefix('cbor', ipld.marshal({value: vertex.value, edges: edges}))
+  }
+
+  hash () {
+    return Vertex.toBuffer(this)
+  }
+
+  static hash (data) {
+    return ipld.multihash(data)
   }
 
   static fromBuffer (data) {
-    return new Vertex()
-  }
-
-  toBuffer () {
-    return this
-  }
-
-  static resolveVertex (store, link, decoders = Vertex.decoders) {
-    return new Promise((resolve, reject) => {
-      store.get(link.hash, (val, err) => {
-        if (val) {
-          const type = val[0]
-          resolve(decoders[type](val))
-        } else {
-          reject(err)
-        }
-      })
+    // to do handle externtions
+    let {value, edges} = ipld.unmarshal(multicodec.rmPrefix(data))
+    edges = edges.map(([name, link]) => {
+      return [name, new Link(link)]
     })
-  }
-
-  /**
-   * @property {*} value the value of the vertex
-   */
-  get value () {
-    return this._value
-  }
-
-  /**
-   * @property {*} the edges of the vertex
-   */
-  get edges () {
-    return this._edges
-  }
-
-  /**
-   * @property {Vertex} returns the root vertex
-   */
-  get root () {
-    let vertex = this
-    while (vertex._parent) {
-      vertex = vertex._parent
-    }
-    return vertex
+    return new Vertex({
+      value: value,
+      edges: new Map(edges)
+    })
   }
 
   /**
    * @property {boolean} Returns truthy on whether the vertexs is empty
    */
   get isEmpty () {
-    return this._edges.size === 0 && this._value === undefined
+    return !this.edges.size && (this.value === undefined || this.value === null)
   }
 
-  // returns new trie
+  /**
+   * @property {boolean} isLeaf wether or not the current vertex is a leaf
+   */
+  get isLeaf () {
+    return this.edges.size === 0
+  }
+
+  //
   set (path, newVertex) {
-    const value = {
-      op: 'set',
-      value: newVertex
-    }
+    this._cache.update(path, vertex => {
+      vertex.value = {
+        op: 'set',
+        vertex: newVertex
+      }
 
-    const opVertex = this._cache.get(path)
-    if (opVertex) {
-      opVertex.value = value
-    } else {
-      this._cache.set(path, new CacheVertex(value))
-    }
+      newVertex._cache = vertex
+      return vertex
+    })
   }
 
-  // returns new trie
+  //
   del (path) {
-    this._cache.set(path, new CacheVertex({
-      op: 'del'
-    }))
+    this._cache.del(path)
   }
 
+  //
   get (path) {
     return new Promise((resolve, reject) => {
+      // check the cache first
       const cachedVertex = this._cache.get(path)
       if (!cachedVertex || cachedVertex.isEmpty) {
         // get the value from the store
-        this._getFromStore(path, foundVertex => {
-          if (cachedVertex) {
-            foundVertex._cache = cachedVertex
-          }
-          resolve(cachedVertex)
-        }, reject)
-      } else if (vertex.value.op === 'del') {
+        this._store.get(this, path).then(resolve, reject)
+      } else if (cachedVertex.op === 'del') {
+        if (cachedVertex.isLeaf) {
+          reject('no vertex was found')
+        } else {
+          cachedVertex.vertex = new Vertex()
+          resolve(cachedVertex.vertex)
+        }
         // the value is marked for deletion
-        resolve()
       } else {
         // return the cached value
-        const vertex = cachedVertex.value.value
-        vertex._cache = cachedVertex
+        const vertex = cachedVertex.vertex
         resolve(vertex)
       }
     })
   }
 
-  _getFromStore (path, resolve, reject) {
-    const label = path.shift()
-    const edge = this._edges[label]
-    if (edge) {
-      if (edge instanceof Link) {
-        Vertex.resolveVertex(this.store, edge).then(vertex => {
-          onVertexFound(label, edge)
-        }, reject)
-      } else {
-        onVertexFound(label, edge)
-      }
-    } else {
-      resolve()
-    }
+  update (path) {
+    // checks the cache first
+    return new Promise(resolve => {
+      this._cache.updateAsync(path, (cachedVertex, updateCacheFn) => {
+        let vertex = cachedVertex.vertex
+        if (cachedVertex.op === 'del') {
+          vertex = new Vertex({store: this._store})
+        }
 
-    // runs when a vertex is found.
-    function onVertexFound (label, vertex) {
-      if (path.length) {
-        vertex._getFromStore(path, resolve, reject, onVertex)
-      } else {
-        resolve(vertex)
-      }
-    }
+        if (vertex) {
+          onVertexFound(vertex)
+        } else {
+          // if there is no vertex found in the cache
+          this._store.get(this, path)
+            .then(onVertexFound)
+            .catch(() => {
+              onVertexFound(new Vertex({store: this._store}))
+            })
+        }
+
+        function onVertexFound (vertex) {
+          resolve([vertex, updatedVertex => {
+            updateCacheFn(updatedVertex._cache)
+          }])
+        }
+      })
+    })
   }
 
-  // returns new state root hash
-  hash () {
-  }
   // saves work to store
   flush () {
-    return new Promise((resolve, reject) => {
-      for (let [, {op, vertex}] in this._cache) {
-        if (op === 'put') {
-          const hash = vertex.hash()
-          this.store.put(hash, vertex)
-        }
-      }
-    })
-  }
-  // returns a stream
-  createReadStream (path) {
-    return new Readable(this.copy())
+    return this._store.batch(this._cache)
   }
 
   copy () {
-    return new Vertex(this.value, this.edges, this._store, this._cache)
+    const cache = this._cache.copy()
+    return new Vertex({
+      value: this.value,
+      edges: this.edges,
+      store: this._store,
+      cache: cache
+    })
   }
 }
-
-Vertex.decorder = {
-  0x0: Vertex.fromBuffer
-}
-
-// vertex = state.get(path)
-// vertex.update(path, val)
-// vertex.getRoot()
