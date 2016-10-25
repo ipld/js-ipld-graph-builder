@@ -82,7 +82,7 @@ module.exports = class Store {
 
   /**
    * flush a cache trie to the db returning a promise that resolves to a merkle link
-   * @param {Cache} 
+   * @param {Cache}
    * @return {Promise}
    */
   batch (cache) {
