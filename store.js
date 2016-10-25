@@ -6,11 +6,21 @@ const Link = require('./link.js')
 const Readable = require('./readStream.js')
 
 module.exports = class Store {
+  /**
+   * Store for merkle tries
+   * @param {Levelup} db a levelup instance used to store the store
+   * @param {Object} resolvers a map of multiformat perfixes to unserializtion function
+   */
   constructor (db = new Levelup('', {db: memdown}), resolvers = {'cbor': Vertex.fromBuffer, null: Vertex}) {
     this._db = db
     this._resolvers = resolvers
   }
 
+  /**
+   * Stores a vertex in the db, returning its merkle link
+   * @param {Vertex}
+   * @return {Promise}
+   */
   set (vertex) {
     // todo check if vertices are virtual
     return new Promise((resolve, reject) => {
@@ -20,6 +30,12 @@ module.exports = class Store {
     })
   }
 
+  /**
+   * Fetches a Vertex from the db
+   * @param {Vertex} rootVertex the vertex to start fetching from
+   * @param {Array} path the path to fetch
+   * @return {Promise}
+   */
   get (rootVertex, path) {
     path = path.slice(0)
     return new Promise((resolve, reject) => {
@@ -44,6 +60,11 @@ module.exports = class Store {
     }
   }
 
+  /**
+   * resolves a merkle link to a Vertex
+   * @param {Link} link
+   * @return {Promise}
+   */
   getLink (link) {
     return new Promise((resolve, reject) => {
       this._db.get(link.hash, (err, data) => {
@@ -59,6 +80,11 @@ module.exports = class Store {
     })
   }
 
+  /**
+   * flush a cache trie to the db returning a promise that resolves to a merkle link
+   * @param {Cache} 
+   * @return {Promise}
+   */
   batch (cache) {
     let promise
     if (cache.op === 'del' && cache.isLeaf) {
@@ -100,15 +126,20 @@ module.exports = class Store {
         }
 
         cache.clear()
-        if (!cache.vertex.isEmpty) {
-          return this.set(cache.vertex)
-        } else {
+        if (cache.vertex.isEmpty) {
+          // dont save empty trie nodes
           return false
+        } else {
+          return this.set(cache.vertex)
         }
       })
   }
 
-  // returns a stream
+  /**
+   * Creates a read stream returning all the Vertices in a trie given a root merkle link
+   * @param {Link} link
+   * @return {ReadStream}
+   */
   createReadStream (link) {
     return new Readable({}, link, this)
   }

@@ -5,19 +5,34 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)  
 
-This isdi easdfkl; asdfj kal;sdjfkl ajsdklfj akls;j wat?
+A merkle trie implemention that if focused on being generic and fast
 
 # INSTALL
-`npm install <name>`
+`npm install merkle-trie`
 
 # USAGE
 
 ```javascript
- javascript = new Javascript()
+  const Vertex = require('merkle-trie')
+  const Store = require('merkle-trie/store.js')
+  let newVertex = new Vertex({store: store})
+  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
+  const value = 'all that is gold does not glitter'
+
+  newVertex.set(path, new Vertex({value: value}))
+  newVertex.get(path)
+  .then(vertex => {
+    // retrieves the vertex that was stored
+    newVertex.del(path)
+  })
+  .flush(link => {
+    // saves all the work done on the trie to the store
+    // and return the merkle link to the root vertex
+  })
 ```
 
-# BROWSER  
-Can be used with [browserify](http://browserify.org/)
+# TESTS
+`npm run tests`
 
 # API
 [./docs/](./docs/index.md)
