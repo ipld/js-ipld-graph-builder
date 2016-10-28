@@ -11,7 +11,7 @@ module.exports = class Store {
    * @param {Levelup} db a levelup instance used to store the store
    * @param {Object} resolvers a map of multiformat perfixes to unserializtion function
    */
-  constructor (db = new Levelup('', {db: memdown}), resolvers = {'cbor': Vertex.fromBuffer, null: Vertex}) {
+  constructor (db = new Levelup('', {db: memdown}), resolvers = {'cbor': Vertex.unserialize, null: Vertex}) {
     this._db = db
     this._resolvers = resolvers
   }
@@ -24,7 +24,7 @@ module.exports = class Store {
   set (vertex) {
     // todo check if vertices are virtual
     return new Promise((resolve, reject) => {
-      const buffer = vertex.toBuffer()
+      const buffer = vertex.serialize()
       const hash = vertex.constructor.hash(buffer)
       this._db.put(hash, buffer, resolve.bind(resolve, new Link(hash)))
     })

@@ -22,11 +22,11 @@ module.exports = class Vertex {
   /**
    * @return {Buffer} the serialized Vertex
    */
-  toBuffer () {
-    return Vertex.toBuffer(this)
+  serialize () {
+    return Vertex.serialize(this)
   }
 
-  static toBuffer (vertex) {
+  static serialize (vertex) {
     const edges = [...vertex.edges].map(item => {
       item[1] = item[1].toBuffer()
       return item
@@ -38,7 +38,7 @@ module.exports = class Vertex {
    * @return {string} the hash of this vertex
    */
   hash () {
-    return Vertex.toBuffer(this)
+    return Vertex.serialize(this)
   }
 
   static hash (data) {
@@ -50,7 +50,7 @@ module.exports = class Vertex {
    * @param {Buffer} data
    * @return {Vertex}
    */
-  static fromBuffer (data) {
+  static unserialize (data) {
     // to do handle externtions
     let {value, edges} = ipld.unmarshal(multicodec.rmPrefix(data))
     edges = edges.map(([name, link]) => {

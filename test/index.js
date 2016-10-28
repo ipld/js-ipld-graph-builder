@@ -89,8 +89,8 @@ tape('hashes and serializtion', t => {
   let value = 'value'
   vertex.value = value
   const hash = vertex.hash()
-  const buffer = vertex.toBuffer()
-  vertex = Vertex.fromBuffer(buffer)
+  const buffer = vertex.serialize()
+  vertex = Vertex.unserialize(buffer)
   t.equals(value, vertex.value, 'should equal serialized version')
   t.equals(vertex.hash().toString('hex'), hash.toString('hex'), 'hashes should be equal')
   t.end()
