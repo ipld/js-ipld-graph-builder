@@ -24,9 +24,13 @@ module.exports = class Store {
   set (vertex) {
     // todo check if vertices are virtual
     return new Promise((resolve, reject) => {
-      const buffer = vertex.serialize()
-      const hash = vertex.constructor.hash(buffer)
-      this._db.put(hash, buffer, resolve.bind(resolve, new Link(hash)))
+      let buffer
+      vertex.serialize().then(b => {
+        buffer = b
+        return vertex.constructor.hash(buffer)
+      }).then(hash => {
+        this._db.put(hash, buffer, resolve.bind(resolve, new Link(hash)))
+      })
     })
   }
 
@@ -72,9 +76,10 @@ module.exports = class Store {
           reject(err)
         } else {
           const codec = multicodec.getCodec(data)
-          const vertex = this._resolvers[codec](data)
-          vertex._store = this
-          resolve(vertex)
+          this._resolvers[codec](data).then(vertex => {
+            vertex._store = this
+            resolve(vertex)
+          })
         }
       })
     })

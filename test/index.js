@@ -32,12 +32,12 @@ tape('basic set, get, del', t => {
     return store.getLink(link)
   })
   .then(vertex => {
-    // console.log(vertex);
-    newVertex = vertex
-    return newVertex.get(path.concat(['last']))
+    return vertex.get(path.concat(['last']))
   }).then(vertex => {
     t.equals(vertex.value, value, 'retieve through storage should work')
     t.end()
+  }).catch(err => {
+    console.log(err)
   })
 })
 
@@ -87,13 +87,21 @@ tape('copy', t => {
 tape('hashes and serializtion', t => {
   let vertex = new Vertex()
   let value = 'value'
+  let hash
+
   vertex.value = value
-  const hash = vertex.hash()
-  const buffer = vertex.serialize()
-  vertex = Vertex.unserialize(buffer)
-  t.equals(value, vertex.value, 'should equal serialized version')
-  t.equals(vertex.hash().toString('hex'), hash.toString('hex'), 'hashes should be equal')
-  t.end()
+  vertex.hash().then(h => {
+    hash = h
+    return vertex.serialize()
+  }).then(buffer => {
+    return Vertex.unserialize(buffer)
+  }).then(vertex2 => {
+    t.equals(value, vertex2.value, 'should equal serialized version')
+    return vertex2.hash()
+  }).then(hash2 => {
+    t.equals(hash.toString('hex'), hash2.toString('hex'), 'hashes should be equal')
+    t.end()
+  })
 })
 
 tape('store', t => {

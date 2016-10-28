@@ -20,45 +20,51 @@ module.exports = class Vertex {
   }
 
   /**
-   * @return {Buffer} the serialized Vertex
+   * @return {Promise} the promise resolves the serialized Vertex
    */
   serialize () {
     return Vertex.serialize(this)
   }
 
   static serialize (vertex) {
-    const edges = [...vertex.edges].map(item => {
-      item[1] = item[1].toBuffer()
-      return item
+    return new Promise(resolve => {
+      const edges = [...vertex.edges].map(item => {
+        item[1] = item[1].toBuffer()
+        return item
+      })
+      resolve(multicodec.addPrefix('cbor', ipld.marshal({value: vertex.value, edges: edges})))
     })
-    return multicodec.addPrefix('cbor', ipld.marshal({value: vertex.value, edges: edges}))
   }
 
   /**
-   * @return {string} the hash of this vertex
+   * @return {Promise} the promise resolves the hash of this vertex
    */
   hash () {
     return Vertex.serialize(this)
   }
 
   static hash (data) {
-    return ipld.multihash(data)
+    return new Promise(resolve => {
+      resolve(ipld.multihash(data))
+    })
   }
 
   /**
    * unserialize a Vertex
    * @param {Buffer} data
-   * @return {Vertex}
+   * @return {Promise}
    */
   static unserialize (data) {
     // to do handle externtions
-    let {value, edges} = ipld.unmarshal(multicodec.rmPrefix(data))
-    edges = edges.map(([name, link]) => {
-      return [name, new Link(link)]
-    })
-    return new Vertex({
-      value: value,
-      edges: new Map(edges)
+    return new Promise(resolve => {
+      let {value, edges} = ipld.unmarshal(multicodec.rmPrefix(data))
+      edges = edges.map(([name, link]) => {
+        return [name, new Link(link)]
+      })
+      resolve(new Vertex({
+        value: value,
+        edges: new Map(edges)
+      }))
     })
   }
 
