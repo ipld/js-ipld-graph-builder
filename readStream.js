@@ -1,5 +1,4 @@
 const Readable = require('readable-stream').Readable
-const CID = require('cids')
 
 module.exports = class TrieReadable extends Readable {
   constructor (opts = {}, link, store) {

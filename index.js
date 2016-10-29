@@ -1,6 +1,5 @@
 const dagCBOR = require('ipld-dag-cbor')
 const CID = require('cids')
-const multihashing = require('multihashing')
 const CacheVertex = require('./cache.js')
 
 module.exports = class Vertex {
@@ -60,8 +59,14 @@ module.exports = class Vertex {
   }
 
   static hash (data) {
-    return new Promise(resolve => {
-      resolve(new CID(1, 'dag-cbor', multihashing(data, 'sha2-256')))
+    return new Promise((resolve, reject) => {
+      resolve(dagCBOR.util.cid(data, (err, cid) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(cid)
+        }
+      }))
     })
   }
 
