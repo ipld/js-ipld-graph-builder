@@ -31,7 +31,6 @@ tape('basic set, get, del', t => {
     return store.getCID(link)
   })
   .then(vertex => {
-    console.log('here');
     return vertex.get(path.concat(['last']))
   }).then(vertex => {
     t.equals(vertex.value, value, 'retieve through storage should work')
