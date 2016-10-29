@@ -1,4 +1,5 @@
 const Readable = require('readable-stream').Readable
+const CID = require('cids')
 
 module.exports = class TrieReadable extends Readable {
   constructor (opts = {}, link, store) {
@@ -19,7 +20,7 @@ module.exports = class TrieReadable extends Readable {
   }
 
   __read () {
-    this._store.getLink(this._link).then(vertex => {
+    this._store.getCID(this._link).then(vertex => {
       this.push(vertex)
       if (vertex.isLeaf) {
         this.push(null)

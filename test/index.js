@@ -1,13 +1,12 @@
-'use strict'
 const tape = require('tape')
 const Vertex = require('../')
 const Store = require('../store.js')
 const Cache = require('../cache.js')
-const Link = require('../link.js')
+const multicodec = require('multicodec')
 
 tape('basic set, get, del', t => {
   const store = new Store()
-  let newVertex = new Vertex({store: store})
+  const newVertex = new Vertex({store: store})
   const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
   const value = 'all that is gold does not glitter'
 
@@ -29,9 +28,10 @@ tape('basic set, get, del', t => {
     return newVertex.flush()
   })
   .then(link => {
-    return store.getLink(link)
+    return store.getCID(link)
   })
   .then(vertex => {
+    console.log('here');
     return vertex.get(path.concat(['last']))
   }).then(vertex => {
     t.equals(vertex.value, value, 'retieve through storage should work')
@@ -100,6 +100,15 @@ tape('hashes and serializtion', t => {
     return vertex2.hash()
   }).then(hash2 => {
     t.equals(hash.toString('hex'), hash2.toString('hex'), 'hashes should be equal')
+    const circleVal = {edges: new Map(), value: null}
+    circleVal.value = circleVal
+    return Vertex.serialize(circleVal)
+  }).catch(err => {
+    t.true(err, 'should have an error if invalid data stuct')
+  }).then(() => {
+    return Vertex.deserialize(multicodec.addPrefix('cbor', new Buffer([33, 22])))
+  }).catch(err => {
+    t.true(err, 'should have an error if invalid data stuct')
     t.end()
   })
 })
@@ -112,11 +121,8 @@ tape('store', t => {
   let rootVertex
   cache.set(path, new Vertex({value: value}))
 
-  store.getLink(new Link('invalid link'))
-  .catch(error => {
-    t.ok(error, 'should generate an error for non-existant links')
-    return store.get(new Vertex(), path)
-  })
+  store
+  .get(new Vertex(), path)
   .catch(err => {
     t.ok(err, 'shoulnt get path')
   })
@@ -124,11 +130,11 @@ tape('store', t => {
     return store.batch(cache)
   })
   .then(link => {
-    return store.getLink(link)
+    return store.getCID(link)
   })
   .then(vertex => {
     rootVertex = vertex
-    t.true(vertex.edges.get('a') instanceof Link, 'should return the root Vertex')
+    t.true(vertex.edges.get('a'), 'should return the root Vertex')
     return store.get(vertex, path)
   })
   .then(vertex => {
@@ -136,7 +142,7 @@ tape('store', t => {
     cache.del(path)
     return store.batch(cache)
   })
-  .then((link) => {
+  .then(link => {
     t.equals(link, false, 'trie should be empty')
     return store.get(cache.vertex, path)
   }).catch(err => {

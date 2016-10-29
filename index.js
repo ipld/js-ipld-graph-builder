@@ -1,7 +1,7 @@
-const ipld = require('ipld')
-const multicodec = require('multicodec')
+const dagCBOR = require('ipld-dag-cbor')
+const CID = require('cids')
+const multihashing = require('multihashing')
 const CacheVertex = require('./cache.js')
-const Link = require('./link.js')
 
 module.exports = class Vertex {
   /**
@@ -17,6 +17,13 @@ module.exports = class Vertex {
     this._store = opts.store
     this._cache = opts.cache || new CacheVertex()
     this._cache.vertex = this
+
+    // convert into map
+    const edges = this.edges
+    this.edges = new Map()
+    Object.keys(edges).forEach(key => {
+      this.edges.set(key, new CID(edges[key]['/']))
+    })
   }
 
   /**
@@ -27,12 +34,21 @@ module.exports = class Vertex {
   }
 
   static serialize (vertex) {
-    return new Promise(resolve => {
-      const edges = [...vertex.edges].map(item => {
-        item[1] = item[1].toBuffer()
-        return item
+    return new Promise((resolve, reject) => {
+      const edges = {};
+      [...vertex.edges].forEach(([name, edge]) => {
+        edges[name] = {
+          '/': edge.buffer
+        }
       })
-      resolve(multicodec.addPrefix('cbor', ipld.marshal({value: vertex.value, edges: edges})))
+
+      dagCBOR.util.serialize([vertex.value, edges], (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
+      })
     })
   }
 
@@ -40,31 +56,12 @@ module.exports = class Vertex {
    * @return {Promise} the promise resolves the hash of this vertex
    */
   hash () {
-    return Vertex.serialize(this)
+    return this.serialize().then(data => Vertex.hash(data))
   }
 
   static hash (data) {
     return new Promise(resolve => {
-      resolve(ipld.multihash(data))
-    })
-  }
-
-  /**
-   * unserialize a Vertex
-   * @param {Buffer} data
-   * @return {Promise}
-   */
-  static unserialize (data) {
-    // to do handle externtions
-    return new Promise(resolve => {
-      let {value, edges} = ipld.unmarshal(multicodec.rmPrefix(data))
-      edges = edges.map(([name, link]) => {
-        return [name, new Link(link)]
-      })
-      resolve(new Vertex({
-        value: value,
-        edges: new Map(edges)
-      }))
+      resolve(new CID(1, 'dag-cbor', multihashing(data, 'sha2-256')))
     })
   }
 

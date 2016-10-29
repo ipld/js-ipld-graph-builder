@@ -1,19 +1,16 @@
-const multicodec = require('multicodec')
-const Levelup = require('levelup')
-const memdown = require('memdown')
 const Vertex = require('./index.js')
-const Link = require('./link.js')
 const Readable = require('./readStream.js')
+const IPLDResolver = require('ipld-resolver')
+const Block = require('ipfs-block')
 
 module.exports = class Store {
   /**
    * Store for merkle tries
    * @param {Levelup} db a levelup instance used to store the store
-   * @param {Object} resolvers a map of multiformat perfixes to unserializtion function
+   * @param {Object} resolvers a map of multiformat perfixes to deserializtion function
    */
-  constructor (db = new Levelup('', {db: memdown}), resolvers = {'cbor': Vertex.unserialize, null: Vertex}) {
+  constructor (db = new IPLDResolver()) {
     this._db = db
-    this._resolvers = resolvers
   }
 
   /**
@@ -22,14 +19,16 @@ module.exports = class Store {
    * @return {Promise}
    */
   set (vertex) {
-    // todo check if vertices are virtual
-    return new Promise((resolve, reject) => {
-      let buffer
-      vertex.serialize().then(b => {
-        buffer = b
-        return vertex.constructor.hash(buffer)
-      }).then(hash => {
-        this._db.put(hash, buffer, resolve.bind(resolve, new Link(hash)))
+    let buffer
+    return vertex.serialize().then(b => {
+      buffer = b
+      return vertex.constructor.hash(buffer)
+    }).then(hash => {
+      return new Promise((resolve, reject) => {
+        this._db.bs.put({
+          cid: hash,
+          block: new Block(buffer)
+        }, resolve.bind(resolve, hash))
       })
     })
   }
@@ -56,30 +55,26 @@ module.exports = class Store {
       return resolve(rootVertex)
     }
 
-    const edge = rootVertex.edges.get(path.shift())
-    if (edge instanceof Link) {
-      this.getLink(edge).then(vertex => this._get(vertex, path, resolve, reject))
+    let edge = rootVertex.edges.get(path.shift())
+    if (edge) {
+      this.getCID(edge).then(vertex => this._get(vertex, path, resolve, reject))
     } else {
       this._get(edge, path, resolve, reject)
     }
   }
 
   /**
-   * resolves a merkle link to a Vertex
-   * @param {Link} link
+   * resolves a CID to a Vertex
+   * @param {CID} CID
    * @return {Promise}
    */
-  getLink (link) {
+  getCID (cid) {
     return new Promise((resolve, reject) => {
-      this._db.get(link.hash, (err, data) => {
+      this._db.get(cid, (err, [value, edges]) => {
         if (err) {
           reject(err)
         } else {
-          const codec = multicodec.getCodec(data)
-          this._resolvers[codec](data).then(vertex => {
-            vertex._store = this
-            resolve(vertex)
-          })
+          resolve(new Vertex({value: value, edges: edges, store: this}))
         }
       })
     })
@@ -109,7 +104,7 @@ module.exports = class Store {
         //     b <-- we are going here next, do we already know about this vertex?
         const link = cache.vertex.edges.get(name)
         if (link && nextedCache.op !== 'del' && !nextedCache.vertex) {
-          return this.getLink(link).then(foundVertex => {
+          return this.getCID(link).then(foundVertex => {
             nextedCache.vertex = foundVertex
             return this.batch(nextedCache)
           })
