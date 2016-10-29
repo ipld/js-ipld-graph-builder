@@ -5,7 +5,7 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)  
 
-A merkle trie implemention that if focused on being generic and fast
+A merkle trie implemention that if focused on being generic and fast backed by IPFS
 
 # INSTALL
 `npm install merkle-trie`
