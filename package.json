@@ -22,6 +22,7 @@
     "cids": "^0.2.0",
     "imperative-trie": "^0.0.1",
     "ipld": "^0.6.0",
+    "ipld-dag-cbor": "^0.7.0",
     "multicodec": "^0.1.0",
     "multihashing": "^0.2.1"
   },
