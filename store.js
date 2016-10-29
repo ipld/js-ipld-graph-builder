@@ -6,7 +6,7 @@ const Block = require('ipfs-block')
 module.exports = class Store {
   /**
    * Store for merkle tries
-   * @param {Levelup} db a levelup instance used to store the store
+   * @param {IPLDResolver} a [IPLDResolver](https://github.com/ipld/js-ipld-resolver) instance used to store the store
    * @param {Object} resolvers a map of multiformat perfixes to deserializtion function
    */
   constructor (resolver = new IPLDResolver()) {
@@ -64,7 +64,7 @@ module.exports = class Store {
   }
 
   /**
-   * resolves a CID to a Vertex
+   * resolves a [CID](https://github.com/ipfs/js-cid) to a Vertex
    * @param {CID} CID
    * @return {Promise}
    */
