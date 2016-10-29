@@ -9,8 +9,8 @@ module.exports = class Store {
    * @param {Levelup} db a levelup instance used to store the store
    * @param {Object} resolvers a map of multiformat perfixes to deserializtion function
    */
-  constructor (db = new IPLDResolver()) {
-    this._db = db
+  constructor (resolver = new IPLDResolver()) {
+    this.resolver = resolver
   }
 
   /**
@@ -25,7 +25,7 @@ module.exports = class Store {
       return vertex.constructor.hash(buffer)
     }).then(hash => {
       return new Promise((resolve, reject) => {
-        this._db.bs.put({
+        this.resolver.bs.put({
           cid: hash,
           block: new Block(buffer)
         }, resolve.bind(resolve, hash))
@@ -70,7 +70,7 @@ module.exports = class Store {
    */
   getCID (cid) {
     return new Promise((resolve, reject) => {
-      this._db.get(cid, (err, [value, edges]) => {
+      this.resolver.get(cid, (err, [value, edges]) => {
         if (err) {
           reject(err)
         } else {
