@@ -7,7 +7,7 @@
     "coverage": "istanbul cover ./test/index.js",
     "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
     "lint": "standard",
-    "test": "tape ./test/index.js",
+    "test": "node --harmony ./test/index.js",
     "build:docs": "documentation --github  -f md ./index.js > ./docs/Vertex.md && documentation --github  -f md ./store.js > ./docs/Store.md "
   },
   "keywords": [

@@ -10,18 +10,14 @@ module.exports = class Resolver extends IPLDResolver {
    * @param {Vertex}
    * @return {Promise}
    */
-  set (vertex) {
-    let buffer
-    return vertex.serialize().then(b => {
-      buffer = b
-      return vertex.constructor.hash(buffer)
-    }).then(hash => {
-      return new Promise((resolve, reject) => {
-        this.bs.put({
-          cid: hash,
-          block: new Block(buffer)
-        }, resolve.bind(resolve, hash))
-      })
+  async set (vertex) {
+    let buffer = await vertex.serialize()
+    let hash = await vertex.constructor.hash(buffer)
+    return new Promise((resolve, reject) => {
+      this.bs.put({
+        cid: hash,
+        block: new Block(buffer)
+      }, resolve.bind(resolve, hash))
     })
   }
 
@@ -31,28 +27,16 @@ module.exports = class Resolver extends IPLDResolver {
    * @param {Array} path the path to fetch
    * @return {Promise}
    */
-  getPath (rootVertex, path) {
-    path = path.slice(0)
-    return new Promise((resolve, reject) => {
-      this._getPath(rootVertex, path, resolve, reject)
-    })
-  }
-
-  _getPath (rootVertex, path, resolve, reject) {
-    if (!rootVertex) {
-      return reject('no vertex was found')
+  async getPath (vertex, path) {
+    for (let name of path) {
+      let edge = vertex.edges.get(name)
+      if (edge) {
+        vertex = await this.getCID(edge)
+      } else {
+        throw new Error('no vertex was found')
+      }
     }
-
-    if (!path.length) {
-      return resolve(rootVertex)
-    }
-
-    let edge = rootVertex.edges.get(path.shift())
-    if (edge) {
-      this.getCID(edge).then(vertex => this._getPath(vertex, path, resolve, reject))
-    } else {
-      this._getPath(edge, path, resolve, reject)
-    }
+    return vertex
   }
 
   /**
@@ -82,7 +66,7 @@ module.exports = class Resolver extends IPLDResolver {
    * @param {Cache}
    * @return {Promise}
    */
-  batch (cache) {
+  async batch (cache) {
     let promise
     if (cache.op === 'del' && cache.isLeaf) {
       return false
@@ -93,7 +77,7 @@ module.exports = class Resolver extends IPLDResolver {
       cache.vertex = new Vertex({store: this, cache: cache})
       promise = Promise.all([...cache.edges].map(([, vertex]) => this.batch(vertex)))
     } else {
-      promise = Promise.all([...cache.edges].map(([name, nextedCache]) => {
+      promise = Promise.all([...cache.edges].map(async ([name, nextedCache]) => {
         // if the edge of the vertex is merkle link and the also has the same path
         // but doesn't have a new vertex then resolve the that edge
         //     a <-- we are here in the trie
@@ -101,35 +85,32 @@ module.exports = class Resolver extends IPLDResolver {
         //     b <-- we are going here next, do we already know about this vertex?
         const cid = cache.vertex.edges.get(name)
         if (cid && nextedCache.op !== 'del' && !nextedCache.vertex) {
-          return this.getCID(cid).then(foundVertex => {
-            nextedCache.vertex = foundVertex
-            return this.batch(nextedCache)
-          })
+          const foundVertex = await this.getCID(cid)
+          nextedCache.vertex = foundVertex
+          return this.batch(nextedCache)
         } else {
           return this.batch(nextedCache)
         }
       }))
     }
 
-    return promise
-      .then(hashes => {
-        for (const [edge] of cache.edges) {
-          const hash = hashes.shift()
-          if (hash) {
-            cache.vertex.edges.set(edge, hash)
-          } else {
-            cache.vertex.edges.delete(edge)
-          }
-        }
+    const hashes = await promise
+    for (const [edge] of cache.edges) {
+      const hash = hashes.shift()
+      if (hash) {
+        cache.vertex.edges.set(edge, hash)
+      } else {
+        cache.vertex.edges.delete(edge)
+      }
+    }
 
-        cache.clear()
-        if (cache.vertex.isEmpty) {
-          // dont save empty trie nodes
-          return false
-        } else {
-          return this.set(cache.vertex)
-        }
-      })
+    cache.clear()
+    if (cache.vertex.isEmpty) {
+      // dont save empty trie nodes
+      return false
+    } else {
+      return this.set(cache.vertex)
+    }
   }
 
   /**

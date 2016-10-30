@@ -140,7 +140,7 @@ module.exports = class Vertex {
       } else if (cachedVertex.op === 'del') {
         // the value is marked for deletion
         if (cachedVertex.isLeaf) {
-          reject('no vertex was found')
+          reject(new Error('no vertex was found'))
         } else {
           // the value was deleted but then another value was saved along this path
           cachedVertex.vertex = new Vertex()
