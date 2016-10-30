@@ -4,7 +4,7 @@
   "description": "a merkle trie implemention that if focused on being generic and fast",
   "main": "index.js",
   "scripts": {
-    "coverage": "istanbul cover ./test/index.js",
+    "coverage": "node --harmony ./node_modules/istanbul/lib/cli.js cover ./test/index.js",
     "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
     "lint": "standard",
     "test": "node --harmony ./test/index.js",
