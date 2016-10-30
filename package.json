@@ -8,7 +8,7 @@
     "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
     "lint": "standard",
     "test": "tape ./test/index.js",
-    "build:docs": "documentation build --github  -f md ./index.js > ./docs/Vertex.md && documentation build --github  -f md ./store.js > ./docs/Store.md "
+    "build:docs": "documentation --github  -f md ./index.js > ./docs/Vertex.md && documentation --github  -f md ./store.js > ./docs/Store.md "
   },
   "keywords": [
     "merkle",

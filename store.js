@@ -3,7 +3,7 @@ const Readable = require('./readStream.js')
 const IPLDResolver = require('ipld-resolver')
 const Block = require('ipfs-block')
 
-module.exports = class Store extends IPLDResolver {
+module.exports = class Resolver extends IPLDResolver {
 
   /**
    * Stores a vertex in the db, returning its merkle link
