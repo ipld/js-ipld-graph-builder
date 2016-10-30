@@ -93,7 +93,7 @@ tape('hashes and serializtion', t => {
     hash = h
     return vertex.serialize()
   }).then(buffer => {
-    return Vertex.unserialize(buffer)
+    return Vertex.deserialize(buffer)
   }).then(vertex2 => {
     t.equals(value, vertex2.value, 'should equal serialized version')
     return vertex2.hash()
@@ -121,7 +121,7 @@ tape('store', t => {
   cache.set(path, new Vertex({value: value}))
 
   store
-  .get(new Vertex(), path)
+  .getPath(new Vertex(), path)
   .catch(err => {
     t.ok(err, 'shoulnt get path')
   })
@@ -134,7 +134,7 @@ tape('store', t => {
   .then(vertex => {
     rootVertex = vertex
     t.true(vertex.edges.get('a'), 'should return the root Vertex')
-    return store.get(vertex, path)
+    return store.getPath(vertex, path)
   })
   .then(vertex => {
     t.equals(vertex.value, value, 'store should retieve vaules')
@@ -143,7 +143,7 @@ tape('store', t => {
   })
   .then(link => {
     t.equals(link, false, 'trie should be empty')
-    return store.get(cache.vertex, path)
+    return store.getPath(cache.vertex, path)
   }).catch(err => {
     t.equals(err, 'no vertex was found', 'shoulnt get path')
 

@@ -51,6 +51,21 @@ module.exports = class Vertex {
     })
   }
 
+  static deserialize (data) {
+    return new Promise((resolve, reject) => {
+      dagCBOR.util.deserialize(data, (err, [value, edges]) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(new Vertex({
+            value: value,
+            edges: edges
+          }))
+        }
+      })
+    })
+  }
+
   /**
    * @return {Promise} the promise resolves the hash of this vertex
    */
@@ -121,7 +136,7 @@ module.exports = class Vertex {
       const cachedVertex = this._cache.get(path)
       if (!cachedVertex || cachedVertex.isEmpty) {
         // get the value from the store
-        this._store.get(this, path).then(resolve, reject)
+        this._store.getPath(this, path).then(resolve, reject)
       } else if (cachedVertex.op === 'del') {
         // the value is marked for deletion
         if (cachedVertex.isLeaf) {
@@ -162,7 +177,7 @@ module.exports = class Vertex {
           onVertexFound(vertex)
         } else {
           // if there is no vertex found in the cache
-          this._store.get(this, path)
+          this._store.getPath(this, path)
             .then(onVertexFound)
             .catch(() => {
               onVertexFound(new Vertex({store: this._store}))
