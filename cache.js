@@ -9,6 +9,10 @@ module.exports = class CacheVertex extends Vertex {
     this.waitingWrites = []
   }
 
+  get hasVertex () {
+    return this.op === 'del' || this.vertex
+  }
+
   get op () {
     return this.value.op
   }

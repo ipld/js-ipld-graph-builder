@@ -134,7 +134,7 @@ module.exports = class Vertex {
     return new Promise((resolve, reject) => {
       // check the cache first
       const cachedVertex = this._cache.get(path)
-      if (!cachedVertex || cachedVertex.isEmpty) {
+      if (!cachedVertex || !cachedVertex.hasVertex) {
         // get the value from the store
         this._store.getPath(this, path).then(resolve, reject)
       } else if (cachedVertex.op === 'del') {

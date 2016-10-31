@@ -32,6 +32,26 @@ tape('basic set, get, del', async t => {
   t.end()
 })
 
+tape('cached opertions', async t => {
+  const store = new Store()
+  const newVertex = new Vertex({store: store})
+  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
+  const value = 'all that is gold does not glitter'
+
+  newVertex.set(path, new Vertex({value: value}))
+  newVertex.set(path.slice(0, 2), new Vertex({
+    value: 'are choosen'
+  }))
+
+  await newVertex.flush(path)
+  newVertex.set(path, new Vertex({value: value}))
+
+  let vertex = await newVertex.get(path.slice(0, 2))
+  t.equals(vertex.value, 'are choosen', 'should fetch correct vertex')
+
+  t.end()
+})
+
 tape('update', async t => {
   const store = new Store()
   let newVertex = new Vertex({store: store})
