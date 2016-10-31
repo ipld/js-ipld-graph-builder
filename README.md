@@ -13,37 +13,50 @@ A merkle trie implemention that if focused on being generic and fast backed by I
 # USAGE
 
 ```javascript
-  const Vertex = require('merkle-trie')
-  const Store = require('merkle-trie/store.js')
-  const store = new Store()
-  const newVertex = new Vertex({store: store})
-  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
-  const value = 'all that is gold does not glitter'
+const store = new Store()
+const newVertex = new Vertex({
+  store: store
+})
+const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
+const value = 'all that is gold does not glitter'
 
-  newVertex.set(path, new Vertex({value: value}))
-  newVertex.get(path)
-  .then(vertex => {
-      // retrieves the vertex that was stored
-    newVertex.del(path)
-  })
-  .flush(link => {
-    // saves all the work done on the trie to the store
-    // and return the merkle link to the root vertex
-    return link
-  }).then(link => {
-    // get the vertex from the store
-    return store.getLink(link)
-  }).then(vertex => {
-    vertex // the vertex returned from the store  
-  })
+newVertex.set(path, new Vertex({
+  value: value
+}))
+
+newVertex.get(path)
+.then(vertex => {
+  // retrieves the vertex that was stored
+  // saves all the work done on the trie to the store
+  // and return the merkle link to the root vertex
+  return newVertex.flush()
+}).then(cid => {
+  // get the vertex from the store
+  return store.getCID(cid)
+}).then(vertex => {
+  // the vertex returned from the store
+  return vertex.get(path)
+}).then(vertex => {
+  console.log(vertex.value) // all that is gold does not glitter
+})
 ```
+# NOTES
+Operations that mutate the trie (set and delete) are synchronous while operations
+that return values (get, update) are asynchronous. This is because writing
+operations are written to a cache. And the cache is only written to the
+store when `flush` is called. The idea here is to avoid doing lookups and
+hashing until it is absolutely necessary.
 
-# TESTS
-`npm run tests`
+Store is just a instance of [ipld-resolver](https://github.com/ipld/js-ipld-resolver)
+that uses promises instead of callbacks.
+
 
 # API
  - [Vertex](./docs/Vertex.md)  
  - [Store](./docs/Store.md)
+
+# TESTS
+`npm run tests`
 
 # LICENSE
 [MPL-2.0](https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2))
