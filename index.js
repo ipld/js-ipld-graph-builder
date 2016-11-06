@@ -1,6 +1,7 @@
 const dagCBOR = require('ipld-dag-cbor')
 const CID = require('cids')
 const CacheVertex = require('./cache.js')
+const Store = require('./store.js')
 
 module.exports = class Vertex {
   /**
@@ -13,9 +14,11 @@ module.exports = class Vertex {
   constructor (opts = {}) {
     this.value = opts.value
     this.edges = opts.edges || new Map()
-    this._store = opts.store
+    this._store = opts.store || new Store()
     this._cache = opts.cache || new CacheVertex()
     this._cache.vertex = this
+
+    this._store.Vertex = Vertex
 
     // convert into map
     const edges = this.edges
@@ -105,6 +108,7 @@ module.exports = class Vertex {
    * @param {Vertex} vertex
    */
   set (path, newVertex) {
+    newVertex.store = this.store
     this._cache.update(path, vertex => {
       vertex.value = {
         op: 'set',

@@ -1,9 +1,12 @@
-const Vertex = require('./index.js')
 const Readable = require('./readStream.js')
 const IPLDResolver = require('ipld-resolver')
 const Block = require('ipfs-block')
 
 module.exports = class Resolver extends IPLDResolver {
+  constructor (bs, Vertex) {
+    super(bs)
+    this.Vertex = Vertex
+  }
 
   /**
    * Stores a vertex in the db, returning its merkle link
@@ -50,7 +53,7 @@ module.exports = class Resolver extends IPLDResolver {
         if (err) {
           reject(err)
         } else {
-          resolve(new Vertex({
+          resolve(new this.Vertex({
             value: value,
             edges: edges,
             store: this
@@ -74,7 +77,10 @@ module.exports = class Resolver extends IPLDResolver {
 
     if (!cache.vertex) {
       // this vertex has never existed before!
-      cache.vertex = new Vertex({store: this, cache: cache})
+      cache.vertex = new this.Vertex({
+        store: this,
+        cache: cache
+      })
       promise = Promise.all([...cache.edges].map(([, vertex]) => this.batch(vertex)))
     } else {
       promise = Promise.all([...cache.edges].map(async ([name, nextedCache]) => {
@@ -97,9 +103,11 @@ module.exports = class Resolver extends IPLDResolver {
     const hashes = await promise
     for (const [edge] of cache.edges) {
       const hash = hashes.shift()
+      // if there is a hash update the current vertex edge
       if (hash) {
         cache.vertex.edges.set(edge, hash)
       } else {
+        // or delete it if it doesn't exist anymore
         cache.vertex.edges.delete(edge)
       }
     }

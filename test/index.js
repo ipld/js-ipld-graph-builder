@@ -5,7 +5,7 @@ const Cache = require('../cache.js')
 const multicodec = require('multicodec')
 
 tape('basic set, get, del', async t => {
-  const store = new Store()
+  const store = new Store(undefined, Vertex)
   const newVertex = new Vertex({store: store})
   const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
   const value = 'all that is gold does not glitter'
@@ -25,6 +25,7 @@ tape('basic set, get, del', async t => {
 
   vertex = await newVertex.get(path)
   t.equals(vertex.isEmpty, true, 'should return a empty vertex if a new vertex saved after an old one was deleted')
+
   let link = await newVertex.flush()
   vertex = await store.getCID(link)
   vertex = await vertex.get(path.concat(['last']))
@@ -122,7 +123,7 @@ tape('hashes and serializtion', async t => {
 })
 
 tape('store', async t => {
-  const store = new Store()
+  const store = new Store(undefined, Vertex)
   let cache = new Cache()
   const path = ['a', 'b', 'c']
   const value = 's0me vaule'
