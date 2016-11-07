@@ -61,6 +61,7 @@ tape('update', async t => {
 
   let [vertex, resolve] = await newVertex.update(path)
   t.equals(vertex.isEmpty, true, 'should return a empty vertex')
+  t.true(vertex.root === newVertex, 'should have correct root')
   resolve(new Vertex({value: value}));
 
   [vertex, resolve] = await newVertex.update(path)

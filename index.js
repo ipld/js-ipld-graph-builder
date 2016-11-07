@@ -29,6 +29,15 @@ module.exports = class Vertex {
   }
 
   /**
+   * Get the parent or root vertex from which this vertex was found by.
+   * Not all Vertices have root vertices, only vertice that where resolve be
+   * get/update have roots
+   */
+  get root () {
+    return this._cache.root.vertex
+  }
+
+  /**
    * @return {Promise} the promise resolves the serialized Vertex
    */
   serialize () {
@@ -134,28 +143,28 @@ module.exports = class Vertex {
    * @param {Array} path
    * @return {Promise}
    */
-  get (path) {
-    return new Promise((resolve, reject) => {
-      // check the cache first
-      const cachedVertex = this._cache.get(path)
-      if (!cachedVertex || !cachedVertex.hasVertex) {
-        // get the value from the store
-        this._store.getPath(this, path).then(resolve, reject)
-      } else if (cachedVertex.op === 'del') {
-        // the value is marked for deletion
-        if (cachedVertex.isLeaf) {
-          reject(new Error('no vertex was found'))
-        } else {
-          // the value was deleted but then another value was saved along this path
-          cachedVertex.vertex = new Vertex()
-          resolve(cachedVertex.vertex)
-        }
+  async get (path) {
+    // check the cache first
+    const cachedVertex = this._cache.get(path)
+    if (!cachedVertex || !cachedVertex.hasVertex) {
+      // get the value from the store
+      return this._store.getPath(this, path)
+    } else if (cachedVertex.op === 'del') {
+      // the value is marked for deletion
+      if (cachedVertex.isLeaf) {
+        throw new Error('no vertex was found')
       } else {
-        // return the cached value
-        const vertex = cachedVertex.vertex
-        resolve(vertex)
+        // the value was deleted but then another value was saved along this path
+        cachedVertex.vertex = new Vertex({
+          store: this._store,
+          cache: cachedVertex
+        })
+        return cachedVertex.vertex
       }
-    })
+    } else {
+      // return the cached value
+      return cachedVertex.vertex
+    }
   }
 
   /**
@@ -172,19 +181,22 @@ module.exports = class Vertex {
     return new Promise(resolve => {
       // checks the cache first
       this._cache.updateAsync(path, (cachedVertex, updateCacheFn) => {
-        let vertex = cachedVertex.vertex
         if (cachedVertex.op === 'del') {
-          vertex = new Vertex({store: this._store})
-        }
-
-        if (vertex) {
-          onVertexFound(vertex)
+          onVertexFound(new Vertex({
+            store: this._store,
+            cache: cachedVertex
+          }))
+        } else if (cachedVertex.vertex) {
+          onVertexFound(cachedVertex.vertex)
         } else {
           // if there is no vertex found in the cache
           this._store.getPath(this, path)
             .then(onVertexFound)
             .catch(() => {
-              onVertexFound(new Vertex({store: this._store}))
+              onVertexFound(new Vertex({
+                store: this._store,
+                cache: cachedVertex
+              }))
             })
         }
 
