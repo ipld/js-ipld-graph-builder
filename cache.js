@@ -1,11 +1,12 @@
 const Vertex = require('imperative-trie')
 
 module.exports = class CacheVertex extends Vertex {
-  constructor (op, vertex, edge) {
+  constructor (op, vertex) {
     super({
       op: op,
       vertex: vertex
     })
+
     this.waitingWrites = []
   }
 
@@ -30,7 +31,7 @@ module.exports = class CacheVertex extends Vertex {
   }
 
   set (path, vertex) {
-    super.set(path, new CacheVertex('set', vertex))
+    super.set(path, vertex._cache)
   }
 
   del (path) {

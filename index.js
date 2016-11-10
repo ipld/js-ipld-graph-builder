@@ -117,16 +117,8 @@ module.exports = class Vertex {
    * @param {Vertex} vertex
    */
   set (path, newVertex) {
-    newVertex.store = this.store
-    this._cache.update(path, vertex => {
-      vertex.value = {
-        op: 'set',
-        vertex: newVertex
-      }
-
-      newVertex._cache = vertex
-      return vertex
-    })
+    newVertex._store = this._store
+    this._cache.set(path, newVertex)
   }
 
   /**

@@ -95,6 +95,23 @@ tape('copy', async t => {
   }
 })
 
+tape('nested caches', async t => {
+  const store = new Store()
+  let rootVertex = new Vertex({store: store})
+  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
+
+  let subVertex = new Vertex({store: store})
+  let subPath = ['sub', 'path']
+  let subValue = 'subVal'
+  subVertex.set(subPath, new Vertex({value: subValue}))
+
+  rootVertex.set(path, subVertex)
+  const result = await rootVertex.get(path.concat(subPath), subValue)
+  t.equals(result.value, subValue, 'should have the correct value')
+
+  t.end()
+})
+
 tape('hashes and serializtion', async t => {
   let vertex = new Vertex()
   let value = 'value'
