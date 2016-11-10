@@ -31,6 +31,7 @@ module.exports = class CacheVertex extends Vertex {
   }
 
   set (path, vertex) {
+    vertex._cache.op = 'set'
     super.set(path, vertex._cache)
   }
 
