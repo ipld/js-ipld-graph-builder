@@ -1,6 +1,6 @@
 {
   "name": "merkle-trie",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "a merkle trie implemention that if focused on being generic and fast",
   "main": "index.js",
   "scripts": {
