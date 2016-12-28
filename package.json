@@ -21,7 +21,7 @@
     "cids": "^0.2.0",
     "imperative-trie": "^0.0.1",
     "ipld-dag-cbor": "^0.8.1",
-    "ipld-resolver": "^0.1.1"
+    "ipld-resolver": "^0.2.0"
   },
   "devDependencies": {
     "browserify": "^13.0.0",
