@@ -82,11 +82,11 @@ module.exports = class Vertex {
   /**
    * @return {Promise} the promise resolves the hash of this vertex
    */
-  hash () {
-    return this.serialize().then(data => Vertex.hash(data))
+  cid () {
+    return this.serialize().then(data => Vertex.cid(data))
   }
 
-  static hash (data) {
+  static cid (data) {
     return new Promise((resolve, reject) => {
       dagCBOR.util.cid(data, (err, cid) => {
         if (err) {

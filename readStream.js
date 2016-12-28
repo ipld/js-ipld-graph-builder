@@ -19,7 +19,7 @@ module.exports = class TrieReadable extends Readable {
   }
 
   __read () {
-    this._store.getCID(this._link).then(vertex => {
+    this._store.get(this._link).then(vertex => {
       this.push(vertex)
       if (vertex.isLeaf) {
         this.push(null)

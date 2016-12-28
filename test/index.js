@@ -26,7 +26,7 @@ tape('basic set, get, del', async t => {
   t.equals(vertex.isEmpty, true, 'should return a empty vertex if a new vertex saved after an old one was deleted')
 
   let link = await newVertex.flush()
-  vertex = await store.getCID(link)
+  vertex = await store.get(link)
 
   try {
     vertex = await vertex.get(path.concat(['last']))
@@ -125,8 +125,8 @@ tape('hashes and serializtion', async t => {
   let vertex2 = await Vertex.deserialize(buffer)
   t.equals(value, vertex2.value, 'should equal serialized version')
 
-  let hash = await vertex.hash()
-  let hash2 = await vertex2.hash()
+  let hash = await vertex.cid()
+  let hash2 = await vertex2.cid()
   t.equals(hash.buffer.toString('hex'), hash2.buffer.toString('hex'), 'hashes should be equal')
   const circleVal = {edges: new Map(), value: null}
   circleVal.value = circleVal
@@ -153,7 +153,7 @@ tape('store', async t => {
     t.ok(err, 'shoulnt get path')
   }
   let cid = await store.batch(cache)
-  rootVertex = await store.getCID(cid)
+  rootVertex = await store.get(cid)
   t.true(rootVertex.edges.get('a'), 'should return the root Vertex')
 
   let vertex = await store.getPath(rootVertex, path)

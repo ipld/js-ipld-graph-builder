@@ -15,12 +15,12 @@ module.exports = class Resolver extends IPLDResolver {
    */
   async set (vertex) {
     let buffer = await vertex.serialize()
-    let hash = await vertex.constructor.hash(buffer)
+    let cid = await vertex.constructor.cid(buffer)
     return new Promise((resolve, reject) => {
       this.bs.put({
-        cid: hash,
+        cid: cid,
         block: new Block(buffer)
-      }, resolve.bind(resolve, hash))
+      }, resolve.bind(resolve, cid))
     })
   }
 
@@ -34,7 +34,7 @@ module.exports = class Resolver extends IPLDResolver {
     for (let name of path) {
       let edge = vertex.edges.get(name)
       if (edge) {
-        vertex = await this.getCID(edge)
+        vertex = await this.get(edge)
       } else {
         throw new Error('no vertex was found')
       }
@@ -47,10 +47,9 @@ module.exports = class Resolver extends IPLDResolver {
    * @param {CID} [cid](https://github.com/ipfs/js-cid)
    * @return {Promise}
    */
-  getCID (cid) {
+  get (cid) {
     return new Promise((resolve, reject) => {
-      this.get(cid, (err, [value, edges]) => {
-        // console.log(edges.not['/'])
+      super.get(cid, (err, [value, edges]) => {
         if (err) {
           reject(err)
         } else {
@@ -92,7 +91,7 @@ module.exports = class Resolver extends IPLDResolver {
         //     b <-- we are going here next, do we already know about this vertex?
         const cid = cache.vertex.edges.get(name)
         if (cid && nextedCache.op !== 'del' && !nextedCache.vertex) {
-          const foundVertex = await this.getCID(cid)
+          const foundVertex = await this.get(cid)
           nextedCache.vertex = foundVertex
           return this.batch(nextedCache)
         } else {
@@ -101,12 +100,12 @@ module.exports = class Resolver extends IPLDResolver {
       }))
     }
 
-    const hashes = await promise
+    const cids = await promise
     for (const [edge] of cache.edges) {
-      const hash = hashes.shift()
+      const cid = cids.shift()
       // if there is a hash update the current vertex edge
-      if (hash) {
-        cache.vertex.edges.set(edge, hash)
+      if (cid) {
+        cache.vertex.edges.set(edge, cid)
       } else {
         // or delete it if it doesn't exist anymore
         cache.vertex.edges.delete(edge)
