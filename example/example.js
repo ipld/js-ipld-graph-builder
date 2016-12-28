@@ -19,7 +19,7 @@ newVertex.get(path)
   return newVertex.flush()
 }).then(cid => {
   // get the vertex from the store
-  return store.getCID(cid)
+  return store.get(cid)
 }).then(vertex => {
   // the vertex returned from the store
   return vertex.get(path)

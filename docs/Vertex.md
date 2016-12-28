@@ -1,6 +1,12 @@
+# cid
+
+[./index.js:85-87](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L85-L87 "Source code on GitHub")
+
+Returns **Promise** the promise resolves the hash of this vertex
+
 # constructor
 
-[./index.js:14-29](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L14-L29 "Source code on GitHub")
+[./index.js:14-30](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L14-L30 "Source code on GitHub")
 
 Create a new vertex
 
@@ -13,7 +19,7 @@ Create a new vertex
 
 # copy
 
-[./index.js:225-233](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L225-L233 "Source code on GitHub")
+[./index.js:218-226](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L218-L226 "Source code on GitHub")
 
 creates a copy of the merkle trie. Work done on this copy will not affect
 the original.
@@ -22,7 +28,7 @@ Returns **Vertex**
 
 # del
 
-[./index.js:137-139](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L137-L139 "Source code on GitHub")
+[./index.js:130-132](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L130-L132 "Source code on GitHub")
 
 deletes an Edge at the end of given path
 
@@ -34,7 +40,7 @@ Returns **boolean** Whether or not anything was deleted
 
 # flush
 
-[./index.js:216-218](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L216-L218 "Source code on GitHub")
+[./index.js:209-211](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L209-L211 "Source code on GitHub")
 
 flush the cache of saved operation to the store
 
@@ -42,7 +48,7 @@ Returns **Promise**
 
 # get
 
-[./index.js:146-168](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L146-L168 "Source code on GitHub")
+[./index.js:139-161](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L139-L161 "Source code on GitHub")
 
 get a vertex given a path
 
@@ -52,15 +58,9 @@ get a vertex given a path
 
 Returns **Promise** 
 
-# hash
-
-[./index.js:84-86](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L84-L86 "Source code on GitHub")
-
-Returns **Promise** the promise resolves the hash of this vertex
-
 # isEmpty
 
-[./index.js:103-105](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L103-L105 "Source code on GitHub")
+[./index.js:104-106](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L104-L106 "Source code on GitHub")
 
 **Properties**
 
@@ -68,7 +68,7 @@ Returns **Promise** the promise resolves the hash of this vertex
 
 # isLeaf
 
-[./index.js:110-112](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L110-L112 "Source code on GitHub")
+[./index.js:111-113](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L111-L113 "Source code on GitHub")
 
 **Properties**
 
@@ -76,7 +76,7 @@ Returns **Promise** the promise resolves the hash of this vertex
 
 # root
 
-[./index.js:36-38](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L36-L38 "Source code on GitHub")
+[./index.js:37-39](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L37-L39 "Source code on GitHub")
 
 Get the parent or root vertex from which this vertex was found by.
 Not all Vertices have root vertices, only vertice that where resolve be
@@ -84,13 +84,13 @@ get/update have roots
 
 # serialize
 
-[./index.js:43-45](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L43-L45 "Source code on GitHub")
+[./index.js:44-46](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L44-L46 "Source code on GitHub")
 
 Returns **Promise** the promise resolves the serialized Vertex
 
 # set
 
-[./index.js:119-130](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L119-L130 "Source code on GitHub")
+[./index.js:120-123](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L120-L123 "Source code on GitHub")
 
 Set an edge on a given path to the given vertex
 
@@ -102,7 +102,7 @@ Set an edge on a given path to the given vertex
 
 # update
 
-[./index.js:180-210](https://github.com/wanderer/merkle-trie/blob/cc127b874bde36d6b5d7edb12f412d58869e685a/./index.js#L180-L210 "Source code on GitHub")
+[./index.js:173-203](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L173-L203 "Source code on GitHub")
 
 Updates an edge on a given path . If the path does not already exist this
 will extend the path. If no value is returned then the vertex that did exist will be deleted
