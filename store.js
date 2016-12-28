@@ -50,6 +50,7 @@ module.exports = class Resolver extends IPLDResolver {
   getCID (cid) {
     return new Promise((resolve, reject) => {
       this.get(cid, (err, [value, edges]) => {
+        // console.log(edges.not['/'])
         if (err) {
           reject(err)
         } else {

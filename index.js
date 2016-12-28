@@ -24,7 +24,8 @@ module.exports = class Vertex {
     const edges = this.edges
     this.edges = new Map()
     Object.keys(edges).forEach(key => {
-      this.edges.set(key, new CID(edges[key]['/']))
+      const edge = edges[key]['/']
+      this.edges.set(key, new CID(edge.version, edge.codec, new Buffer(edge.hash)))
     })
   }
 
@@ -49,7 +50,7 @@ module.exports = class Vertex {
       const edges = {};
       [...vertex.edges].forEach(([name, edge]) => {
         edges[name] = {
-          '/': edge.buffer
+          '/': edge.toJSON()
         }
       })
 
@@ -87,13 +88,13 @@ module.exports = class Vertex {
 
   static hash (data) {
     return new Promise((resolve, reject) => {
-      resolve(dagCBOR.util.cid(data, (err, cid) => {
+      dagCBOR.util.cid(data, (err, cid) => {
         if (err) {
           reject(err)
         } else {
           resolve(cid)
         }
-      }))
+      })
     })
   }
 
