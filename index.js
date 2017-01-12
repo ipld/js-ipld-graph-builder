@@ -17,7 +17,6 @@ module.exports = class Vertex {
     this._store = opts.store || new Store()
     this._cache = opts.cache || new CacheVertex()
     this._cache.vertex = this
-
     this._store.Vertex = Vertex
 
     // convert into map
@@ -30,12 +29,21 @@ module.exports = class Vertex {
   }
 
   /**
-   * Get the parent or root vertex from which this vertex was found by.
-   * Not all Vertices have root vertices, only vertice that where resolve be
+   * Get the root vertex from which this vertex was found by.
+   * Not all Vertices have root vertices, only vertice that where resolve by
    * get/update have roots
    */
   get root () {
     return this._cache.root.vertex
+  }
+
+  /**
+   * Get the parent vertex from which this vertex was found by.
+   * Not all Vertices have parent vertices, only vertice that where resolve by
+   * get/update have parent
+   */
+  get parent () {
+    return this._cache.parent.vertex
   }
 
   /**

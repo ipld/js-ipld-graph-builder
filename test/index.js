@@ -181,6 +181,23 @@ tape('store', async t => {
   t.end()
 })
 
+tape('parent relations', async t => {
+  const store = new Store()
+  const root = new Vertex({store: store})
+  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
+  const value = 'all that is gold does not glitter'
+  const leaf = new Vertex({value: value})
+
+  root.set(path, leaf)
+  await root.flush(path)
+  root.value = 'rootValue'
+
+  t.equals(leaf.root.value, root.value, 'root should always work')
+  t.equals(leaf.parent.edges.has('lost'), true, 'parents should always work')
+
+  t.end()
+})
+
 tape('streams', async t => {
   const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
   const path2 = ['all', 'those', 'who', 'wanderer', 'are', 'lost']
