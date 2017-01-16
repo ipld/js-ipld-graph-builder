@@ -54,6 +54,32 @@ tape('cached opertions', async t => {
   let vertex = await newVertex.get(path.slice(0, 2))
   t.equals(vertex.value, 'are choosen', 'should fetch correct vertex')
 
+  vertex = await newVertex.get(path)
+
+  t.end()
+})
+
+tape('cached opertions; delete after flush', async t => {
+  const store = new Store()
+  const root = new Vertex({
+    store: store
+  })
+  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
+  const value = 'all that is gold does not glitter'
+
+  root.set(path, new Vertex({value: value}))
+
+  await root.flush(path)
+  root.del(path.slice(0, 2))
+
+  try {
+    let vertex = await root.get(path)
+    console.log(vertex)
+    t.fail()
+  } catch (e) {
+    t.pass()
+  }
+
   t.end()
 })
 

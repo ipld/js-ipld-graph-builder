@@ -10,6 +10,21 @@ module.exports = class CacheVertex extends Vertex {
     this.waitingWrites = []
   }
 
+  /**
+   * get a vertex given a path
+   * @param {Array} path
+   * @return {Vertex}
+   */
+  get (path) {
+    path = path.slice(0)
+    let result = this
+    while (path.length && result && result.op !== 'del') {
+      const edge = path.shift()
+      result = result.edges.get(edge)
+    }
+    return result
+  }
+
   get hasVertex () {
     return this.op === 'del' || this.vertex
   }
