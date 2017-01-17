@@ -46,8 +46,15 @@ module.exports = class CacheVertex extends Vertex {
   }
 
   set (path, vertex) {
-    vertex._cache.op = 'set'
-    super.set(path, vertex._cache)
+    if (vertex.isRoot) {
+      vertex._cache.op = 'set'
+      super.set(path, vertex._cache)
+    } else {
+      super.update(path, (cache) => {
+        cache.op = 'set'
+        cache.vertex = vertex
+      })
+    }
   }
 
   del (path) {

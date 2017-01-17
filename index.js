@@ -14,12 +14,18 @@ module.exports = class Vertex {
   constructor (opts = {}) {
     this.value = opts.value
     this.edges = opts.edges || new Map()
-    this._store = opts.store || new Store()
-    this._cache = opts.cache || new CacheVertex()
-    this._cache.vertex = this
-    this._store.Vertex = Vertex
 
-    // convert into map
+    this._root = opts.root || this
+    this._path = opts.path || []
+
+    if (this.isRoot) {
+      this._cache = opts.cache || new CacheVertex('set', this)
+      // this._cache.vertex = this
+      this._store = opts.store || new Store()
+      this._store.Vertex = Vertex
+    }
+
+    // convert edges into map
     const edges = this.edges
     this.edges = new Map()
     Object.keys(edges).forEach(key => {
@@ -28,22 +34,17 @@ module.exports = class Vertex {
     })
   }
 
+  get isRoot () {
+    return this._root === this
+  }
+
   /**
    * Get the root vertex from which this vertex was found by.
    * Not all Vertices have root vertices, only vertice that where resolve by
    * get/update have roots
    */
   get root () {
-    return this._cache.root.vertex
-  }
-
-  /**
-   * Get the parent vertex from which this vertex was found by.
-   * Not all Vertices have parent vertices, only vertice that where resolve by
-   * get/update have parent
-   */
-  get parent () {
-    return this._cache.parent.vertex
+    return this._root
   }
 
   /**
@@ -126,8 +127,10 @@ module.exports = class Vertex {
    * @param {Vertex} vertex
    */
   set (path, newVertex) {
-    newVertex._store = this._store
-    this._cache.set(path, newVertex)
+    path = this._path.concat(path)
+    this.root._cache.set(path, newVertex)
+    newVertex._root = this._root
+    newVertex._path = path
   }
 
   /**
@@ -136,7 +139,8 @@ module.exports = class Vertex {
    * @return {boolean} Whether or not anything was deleted
    */
   del (path) {
-    this._cache.del(path)
+    path = this._path.concat(path)
+    this.root._cache.del(path)
   }
 
   /**
@@ -145,22 +149,22 @@ module.exports = class Vertex {
    * @return {Promise}
    */
   async get (path) {
+    path = this._path.concat(path)
     // check the cache first
-    const cachedVertex = this._cache.get(path)
+    const cachedVertex = this.root._cache.get(path)
     if (!cachedVertex || !cachedVertex.hasVertex) {
       // get the value from the store
-      return this._store.getPath(this, path)
+      return this.root._store.getPath(this, path)
     } else if (cachedVertex.op === 'del') {
       // the value is marked for deletion
       if (cachedVertex.isLeaf) {
         throw new Error('no vertex was found')
       } else {
         // the value was deleted but then another value was saved along this path
-        cachedVertex.vertex = new Vertex({
-          store: this._store,
-          cache: cachedVertex
+        return new Vertex({
+          root: this.root,
+          path: path
         })
-        return cachedVertex.vertex
       }
     } else {
       // return the cached value
@@ -169,53 +173,11 @@ module.exports = class Vertex {
   }
 
   /**
-   * Updates an edge on a given path . If the path does not already exist this
-   * will extend the path. If no value is returned then the vertex that did exist will be deleted
-   * @param {Array} path
-   * @return {Promise}  the promise resolves a vertex and a callback funtion that is used to update the vertex
-   * @example
-   * rootVertex.update(path).then(([vertex, resolve]) => {
-   *   resolve(new Vertex({value: 'some new value'}))
-   * })
-   */
-  update (path) {
-    return new Promise(resolve => {
-      // checks the cache first
-      this._cache.updateAsync(path, (cachedVertex, updateCacheFn) => {
-        if (cachedVertex.op === 'del') {
-          onVertexFound(new Vertex({
-            store: this._store,
-            cache: cachedVertex
-          }))
-        } else if (cachedVertex.vertex) {
-          onVertexFound(cachedVertex.vertex)
-        } else {
-          // if there is no vertex found in the cache
-          this._store.getPath(this, path)
-            .then(onVertexFound)
-            .catch(() => {
-              onVertexFound(new Vertex({
-                store: this._store,
-                cache: cachedVertex
-              }))
-            })
-        }
-
-        function onVertexFound (vertex) {
-          resolve([vertex, updatedVertex => {
-            updateCacheFn(updatedVertex._cache)
-          }])
-        }
-      })
-    })
-  }
-
-  /**
    * flush the cache of saved operation to the store
    * @return {Promise}
    */
   flush () {
-    return this._store.batch(this._cache)
+    return this.root._store.batch(this.root._cache.get(this._path))
   }
 
   /**
@@ -224,12 +186,17 @@ module.exports = class Vertex {
    * @return {Vertex}
    */
   copy () {
-    const cache = this._cache.copy()
-    return new Vertex({
+    const copyVert = new Vertex({
       value: this.value,
-      edges: this.edges,
-      store: this._store,
-      cache: cache
+      edges: this.edges
     })
+
+    if (this.isRoot) {
+      copyVert.cache = this._cache.copy()
+    } else {
+      copyVert._root = this.root.copy()
+      copyVert._path = this._path
+    }
+    return copyVert
   }
 }

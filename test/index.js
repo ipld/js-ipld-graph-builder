@@ -83,29 +83,6 @@ tape('cached opertions; delete after flush', async t => {
   t.end()
 })
 
-tape('update', async t => {
-  const store = new Store()
-  let newVertex = new Vertex({store: store})
-  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
-  const value = 'all that is gold does not glitter'
-
-  let [vertex, resolve] = await newVertex.update(path)
-  t.equals(vertex.isEmpty, true, 'should return a empty vertex')
-  t.true(vertex.root === newVertex, 'should have correct root')
-  resolve(new Vertex({value: value}));
-
-  [vertex, resolve] = await newVertex.update(path)
-  t.equals(vertex.value, value, 'should return the updated vertex')
-  newVertex.del(path);
-
-  [vertex, resolve] = await newVertex.update(path)
-  resolve(new Vertex({value: value}))
-
-  vertex = await newVertex.get(path)
-  t.equals(vertex.value, value, 'should return the updated vertex after a delete')
-  t.end()
-})
-
 tape('copy', async t => {
   const store = new Store()
   let newVertex = new Vertex({store: store})
@@ -219,7 +196,6 @@ tape('parent relations', async t => {
   root.value = 'rootValue'
 
   t.equals(leaf.root.value, root.value, 'root should always work')
-  t.equals(leaf.parent.edges.has('lost'), true, 'parents should always work')
 
   t.end()
 })
