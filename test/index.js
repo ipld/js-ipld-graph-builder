@@ -54,29 +54,32 @@ tape('cached opertions', async t => {
   let vertex = await newVertex.get(path.slice(0, 2))
   t.equals(vertex.value, 'are choosen', 'should fetch correct vertex')
 
+  vertex = await newVertex.get(path)
+
   t.end()
 })
 
-tape('update', async t => {
+tape('cached opertions; delete after flush', async t => {
   const store = new Store()
-  let newVertex = new Vertex({store: store})
+  const root = new Vertex({
+    store: store
+  })
   const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
   const value = 'all that is gold does not glitter'
 
-  let [vertex, resolve] = await newVertex.update(path)
-  t.equals(vertex.isEmpty, true, 'should return a empty vertex')
-  t.true(vertex.root === newVertex, 'should have correct root')
-  resolve(new Vertex({value: value}));
+  root.set(path, new Vertex({value: value}))
 
-  [vertex, resolve] = await newVertex.update(path)
-  t.equals(vertex.value, value, 'should return the updated vertex')
-  newVertex.del(path);
+  await root.flush(path)
+  root.del(path.slice(0, 2))
 
-  [vertex, resolve] = await newVertex.update(path)
-  resolve(new Vertex({value: value}))
+  try {
+    let vertex = await root.get(path)
+    console.log(vertex)
+    t.fail()
+  } catch (e) {
+    t.pass()
+  }
 
-  vertex = await newVertex.get(path)
-  t.equals(vertex.value, value, 'should return the updated vertex after a delete')
   t.end()
 })
 
@@ -193,7 +196,6 @@ tape('parent relations', async t => {
   root.value = 'rootValue'
 
   t.equals(leaf.root.value, root.value, 'root should always work')
-  t.equals(leaf.parent.edges.has('lost'), true, 'parents should always work')
 
   t.end()
 })

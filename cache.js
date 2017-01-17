@@ -10,6 +10,21 @@ module.exports = class CacheVertex extends Vertex {
     this.waitingWrites = []
   }
 
+  /**
+   * get a vertex given a path
+   * @param {Array} path
+   * @return {Vertex}
+   */
+  get (path) {
+    path = path.slice(0)
+    let result = this
+    while (path.length && result && result.op !== 'del') {
+      const edge = path.shift()
+      result = result.edges.get(edge)
+    }
+    return result
+  }
+
   get hasVertex () {
     return this.op === 'del' || this.vertex
   }
@@ -31,8 +46,15 @@ module.exports = class CacheVertex extends Vertex {
   }
 
   set (path, vertex) {
-    vertex._cache.op = 'set'
-    super.set(path, vertex._cache)
+    if (vertex.isRoot) {
+      vertex._cache.op = 'set'
+      super.set(path, vertex._cache)
+    } else {
+      super.update(path, (cache) => {
+        cache.op = 'set'
+        cache.vertex = vertex
+      })
+    }
   }
 
   del (path) {
