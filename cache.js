@@ -6,8 +6,6 @@ module.exports = class CacheVertex extends Vertex {
       op: op,
       vertex: vertex
     })
-
-    this.waitingWrites = []
   }
 
   /**
@@ -46,15 +44,8 @@ module.exports = class CacheVertex extends Vertex {
   }
 
   set (path, vertex) {
-    if (vertex.isRoot) {
-      vertex._cache.op = 'set'
-      super.set(path, vertex._cache)
-    } else {
-      super.update(path, (cache) => {
-        cache.op = 'set'
-        cache.vertex = vertex
-      })
-    }
+    vertex._cache.op = 'set'
+    super.set(path, vertex._cache)
   }
 
   del (path) {

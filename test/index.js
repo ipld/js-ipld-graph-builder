@@ -200,6 +200,48 @@ tape('parent relations', async t => {
   t.end()
 })
 
+tape('implicitaly created vertices', async t => {
+  const store = new Store()
+  const root = new Vertex({
+    store: store
+  })
+  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
+  const value = 'all that is gold does not glitter'
+  const leaf = new Vertex({value: value})
+
+  root.set(path, leaf)
+  const vert = await root.get(path.slice(0, 3))
+  t.equals(vert.isEmpty, true)
+  t.end()
+})
+
+tape('merging subtrees', async t => {
+  const store = new Store()
+  const root = new Vertex({
+    store: store
+  })
+  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
+  const value = 'all that is gold does not glitter'
+  const leaf = new Vertex({value: value})
+
+  root.set(path, leaf)
+  let vert = await root.get(path.slice(0, 3))
+  let copyvert = vert.copy()
+  copyvert.set(['test'], new Vertex({value: 'test'}))
+
+  vert.set([], copyvert)
+  let result = await root.get(path.slice(0, 3).concat(['test']))
+
+  t.equals(result.value, 'test')
+  vert.set(['test'], new Vertex({
+    value: 'overwrite'
+  }))
+  result = await root.get(path.slice(0, 3).concat(['test']))
+  t.equals(result.value, 'overwrite')
+
+  t.end()
+})
+
 tape('streams', async t => {
   const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
   const path2 = ['all', 'those', 'who', 'wanderer', 'are', 'lost']

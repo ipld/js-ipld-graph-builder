@@ -20,7 +20,6 @@ module.exports = class Vertex {
 
     if (this.isRoot) {
       this._cache = opts.cache || new CacheVertex('set', this)
-      // this._cache.vertex = this
       this._store = opts.store || new Store()
       this._store.Vertex = Vertex
     }
@@ -127,6 +126,10 @@ module.exports = class Vertex {
    * @param {Vertex} vertex
    */
   set (path, newVertex) {
+    if (!path.length) {
+      this.value = newVertex.value
+      this.edges = newVertex.edges
+    }
     path = this._path.concat(path)
     this.root._cache.set(path, newVertex)
     newVertex._root = this._root
@@ -154,7 +157,21 @@ module.exports = class Vertex {
     const cachedVertex = this.root._cache.get(path)
     if (!cachedVertex || !cachedVertex.hasVertex) {
       // get the value from the store
-      return this.root._store.getPath(this, path)
+      try {
+        const result = await this.root._store.getPath(this, path)
+        result._root = this.root
+        result._path = path
+        return result
+      } catch (e) {
+        if (cachedVertex) {
+          return new Vertex({
+            root: this.root,
+            path: path
+          })
+        } else {
+          throw (e)
+        }
+      }
     } else if (cachedVertex.op === 'del') {
       // the value is marked for deletion
       if (cachedVertex.isLeaf) {
@@ -186,17 +203,10 @@ module.exports = class Vertex {
    * @return {Vertex}
    */
   copy () {
-    const copyVert = new Vertex({
+    return new Vertex({
       value: this.value,
-      edges: this.edges
+      edges: this.edges,
+      cache: this.root._cache.get(this._path).copy()
     })
-
-    if (this.isRoot) {
-      copyVert.cache = this._cache.copy()
-    } else {
-      copyVert._root = this.root.copy()
-      copyVert._path = this._path
-    }
-    return copyVert
   }
 }
