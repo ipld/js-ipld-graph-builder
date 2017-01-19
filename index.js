@@ -46,6 +46,10 @@ module.exports = class Vertex {
     return this._root
   }
 
+  get path () {
+    return this._path
+  }
+
   /**
    * @return {Promise} the promise resolves the serialized Vertex
    */
@@ -130,7 +134,7 @@ module.exports = class Vertex {
       this.value = newVertex.value
       this.edges = newVertex.edges
     }
-    path = this._path.concat(path)
+    path = this.path.concat(path)
     this.root._cache.set(path, newVertex)
     newVertex._root = this._root
     newVertex._path = path
@@ -142,7 +146,7 @@ module.exports = class Vertex {
    * @return {boolean} Whether or not anything was deleted
    */
   del (path) {
-    path = this._path.concat(path)
+    path = this.path.concat(path)
     this.root._cache.del(path)
   }
 
@@ -152,7 +156,7 @@ module.exports = class Vertex {
    * @return {Promise}
    */
   async get (path) {
-    path = this._path.concat(path)
+    path = this.path.concat(path)
     // check the cache first
     const cachedVertex = this.root._cache.get(path)
     if (!cachedVertex || !cachedVertex.hasVertex) {
