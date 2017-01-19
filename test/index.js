@@ -242,6 +242,22 @@ tape('merging subtrees', async t => {
   t.end()
 })
 
+tape('merging subtrees; paths', async t => {
+  const root = new Vertex({})
+  const path = ['not', 'all', 'those']
+  const path2 = ['who', 'wanderer', 'are', 'lost']
+  const value = 'all that is gold does not glitter'
+  const subtree = new Vertex()
+  subtree.set(path2, new Vertex({
+    value: value
+  }))
+
+  root.set(path, subtree)
+  const leaf = await root.get(path.concat(path2))
+  t.deepEquals(leaf.path, path.concat(path2))
+  t.end()
+})
+
 tape('streams', async t => {
   const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
   const path2 = ['all', 'those', 'who', 'wanderer', 'are', 'lost']

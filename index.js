@@ -43,11 +43,21 @@ module.exports = class Vertex {
    * get/update have roots
    */
   get root () {
-    return this._root
+    return this.pathAndRoot[1]
   }
 
   get path () {
-    return this._path
+    return this.pathAndRoot[0]
+  }
+
+  get pathAndRoot () {
+    let path = []
+    let vertex = this
+    while (!vertex.isRoot) {
+      path = vertex._path.concat(path)
+      vertex = vertex._root
+    }
+    return [path, vertex]
   }
 
   /**
@@ -134,8 +144,9 @@ module.exports = class Vertex {
       this.value = newVertex.value
       this.edges = newVertex.edges
     }
-    path = this.path.concat(path)
-    this.root._cache.set(path, newVertex)
+    const [thisPath, root] = this.pathAndRoot
+    path = thisPath.concat(path)
+    root._cache.set(path, newVertex)
     newVertex._root = this._root
     newVertex._path = path
   }
@@ -146,8 +157,9 @@ module.exports = class Vertex {
    * @return {boolean} Whether or not anything was deleted
    */
   del (path) {
-    path = this.path.concat(path)
-    this.root._cache.del(path)
+    const [thisPath, root] = this.pathAndRoot
+    path = thisPath.concat(path)
+    root._cache.del(path)
   }
 
   /**
@@ -158,11 +170,11 @@ module.exports = class Vertex {
   async get (path) {
     path = this.path.concat(path)
     // check the cache first
-    const cachedVertex = this.root._cache.get(path)
+    const cachedVertex = this._root._cache.get(path)
     if (!cachedVertex || !cachedVertex.hasVertex) {
       // get the value from the store
       try {
-        const result = await this.root._store.getPath(this, path)
+        const result = await this._root._store.getPath(this, path)
         result._root = this.root
         result._path = path
         return result
