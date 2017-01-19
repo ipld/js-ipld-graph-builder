@@ -43,21 +43,21 @@ module.exports = class Vertex {
    * get/update have roots
    */
   get root () {
-    return this.pathAndRoot[1]
+    return this.rootAndPath[0]
   }
 
   get path () {
-    return this.pathAndRoot[0]
+    return this.rootAndPath[1]
   }
 
-  get pathAndRoot () {
+  get rootAndPath () {
     let path = []
     let vertex = this
     while (!vertex.isRoot) {
       path = vertex._path.concat(path)
       vertex = vertex._root
     }
-    return [path, vertex]
+    return [vertex, path]
   }
 
   /**
@@ -144,7 +144,7 @@ module.exports = class Vertex {
       this.value = newVertex.value
       this.edges = newVertex.edges
     }
-    const [thisPath, root] = this.pathAndRoot
+    const [root, thisPath] = this.rootAndPath
     path = thisPath.concat(path)
     root._cache.set(path, newVertex)
     newVertex._root = this._root
@@ -157,7 +157,7 @@ module.exports = class Vertex {
    * @return {boolean} Whether or not anything was deleted
    */
   del (path) {
-    const [thisPath, root] = this.pathAndRoot
+    const [root, thisPath] = this.rootAndPath
     path = thisPath.concat(path)
     root._cache.del(path)
   }
@@ -210,7 +210,8 @@ module.exports = class Vertex {
    * @return {Promise}
    */
   flush () {
-    return this.root._store.batch(this.root._cache.get(this._path))
+    const [root, path] = this.rootAndPath
+    return root._store.batch(root._cache.get(path))
   }
 
   /**
@@ -219,10 +220,11 @@ module.exports = class Vertex {
    * @return {Vertex}
    */
   copy () {
+    const [root, path] = this.rootAndPath
     return new Vertex({
       value: this.value,
       edges: this.edges,
-      cache: this.root._cache.get(this._path).copy()
+      cache: root._cache.get(path).copy()
     })
   }
 }
