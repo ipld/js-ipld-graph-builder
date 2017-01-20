@@ -33,26 +33,42 @@ module.exports = class Vertex {
     })
   }
 
+  /**
+   * Whether or not the Vertex is a root vertex
+   * @returns {Boolean}
+   */
   get isRoot () {
     return this._root === this
   }
 
+  /**
+   * returns the edge from the parent vertex that this vertex is refernced by
+   * @returns {*}
+   */
   get name () {
     return this._path[this._path.length - 1]
   }
+
   /**
-   * Get the root vertex from which this vertex was found by.
-   * Not all Vertices have root vertices, only vertice that where resolve by
-   * get/update have roots
+   * Get the root vertex
+   * @return {Vertex}
    */
   get root () {
     return this.rootAndPath[0]
   }
 
+  /**
+   * Get the path from the root vertex to this vertex
+   * @return {Array}
+   */
   get path () {
     return this.rootAndPath[1]
   }
 
+  /**
+   * Gets the root vertex and the path
+   * @return {Array}
+   */
   get rootAndPath () {
     let path = []
     let vertex = this
@@ -208,6 +224,10 @@ module.exports = class Vertex {
     }
   }
 
+  /**
+   * finds the parent vertex
+   * @return {Promise}
+   */
   async getParent () {
     const [root, path] = this.rootAndPath
     path.pop()
