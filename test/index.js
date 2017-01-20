@@ -102,6 +102,26 @@ tape('copy', async t => {
   }
 })
 
+tape.only('copy manipulating subtress', async t => {
+  const store = new Store()
+  let root = new Vertex({store: store})
+  const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
+  const value = 'all that is gold does not glitter'
+  const subtree = new Vertex()
+  subtree.set(['test'], new Vertex({value: value}))
+  root.set(path, subtree)
+
+  const copy = root.copy()
+
+  let vertex = await copy.get(path.concat(['test']))
+  t.equals(vertex.value, value, 'should store a value')
+  vertex.set(['test2'], new Vertex({value: 'test2'}))
+  // console.log(vertex.root._cache)
+  vertex = await vertex.get(['test2'])
+  t.equals(vertex.value, 'test2', 'should store a value')
+  t.end()
+})
+
 tape('nested caches', async t => {
   const store = new Store()
   let rootVertex = new Vertex({store: store})

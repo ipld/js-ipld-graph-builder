@@ -150,7 +150,7 @@ module.exports = class Vertex {
     const [root, thisPath] = this.rootAndPath
     path = thisPath.concat(path)
     root._cache.set(path, newVertex)
-    newVertex._root = this._root
+    newVertex._root = root
     newVertex._path = path
   }
 
@@ -173,11 +173,11 @@ module.exports = class Vertex {
   async get (path) {
     path = this.path.concat(path)
     // check the cache first
-    const cachedVertex = this._root._cache.get(path)
+    const cachedVertex = this.root._cache.get(path)
     if (!cachedVertex || !cachedVertex.hasVertex) {
       // get the value from the store
       try {
-        const result = await this._root._store.getPath(this, path)
+        const result = await this.root._store.getPath(this, path)
         result._root = this.root
         result._path = path
         return result
