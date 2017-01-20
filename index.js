@@ -37,6 +37,9 @@ module.exports = class Vertex {
     return this._root === this
   }
 
+  get name () {
+    return this._path[this._path.length - 1]
+  }
   /**
    * Get the root vertex from which this vertex was found by.
    * Not all Vertices have root vertices, only vertice that where resolve by
@@ -203,6 +206,12 @@ module.exports = class Vertex {
       // return the cached value
       return cachedVertex.vertex
     }
+  }
+
+  async getParent () {
+    const [root, path] = this.rootAndPath
+    path.pop()
+    return root.get(path)
   }
 
   /**
