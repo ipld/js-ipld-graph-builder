@@ -1,12 +1,12 @@
 # cid
 
-[./index.js:85-87](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L85-L87 "Source code on GitHub")
+[./index.js:126-128](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L126-L128 "Source code on GitHub")
 
 Returns **Promise** the promise resolves the hash of this vertex
 
 # constructor
 
-[./index.js:14-30](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L14-L30 "Source code on GitHub")
+[./index.js:14-34](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L14-L34 "Source code on GitHub")
 
 Create a new vertex
 
@@ -19,7 +19,7 @@ Create a new vertex
 
 # copy
 
-[./index.js:218-226](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L218-L226 "Source code on GitHub")
+[./index.js:251-258](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L251-L258 "Source code on GitHub")
 
 creates a copy of the merkle trie. Work done on this copy will not affect
 the original.
@@ -28,7 +28,7 @@ Returns **Vertex**
 
 # del
 
-[./index.js:130-132](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L130-L132 "Source code on GitHub")
+[./index.js:178-182](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L178-L182 "Source code on GitHub")
 
 deletes an Edge at the end of given path
 
@@ -40,7 +40,7 @@ Returns **boolean** Whether or not anything was deleted
 
 # flush
 
-[./index.js:209-211](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L209-L211 "Source code on GitHub")
+[./index.js:241-244](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L241-L244 "Source code on GitHub")
 
 flush the cache of saved operation to the store
 
@@ -48,7 +48,7 @@ Returns **Promise**
 
 # get
 
-[./index.js:139-161](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L139-L161 "Source code on GitHub")
+[./index.js:189-225](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L189-L225 "Source code on GitHub")
 
 get a vertex given a path
 
@@ -58,9 +58,17 @@ get a vertex given a path
 
 Returns **Promise** 
 
+# getParent
+
+[./index.js:231-235](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L231-L235 "Source code on GitHub")
+
+finds the parent vertex
+
+Returns **Promise** 
+
 # isEmpty
 
-[./index.js:104-106](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L104-L106 "Source code on GitHub")
+[./index.js:145-147](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L145-L147 "Source code on GitHub")
 
 **Properties**
 
@@ -68,29 +76,61 @@ Returns **Promise**
 
 # isLeaf
 
-[./index.js:111-113](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L111-L113 "Source code on GitHub")
+[./index.js:152-154](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L152-L154 "Source code on GitHub")
 
 **Properties**
 
 -   `isLeaf` **boolean** wether or not the current vertex is a leaf
 
+# isRoot
+
+[./index.js:40-42](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L40-L42 "Source code on GitHub")
+
+Whether or not the Vertex is a root vertex
+
+Returns **Boolean** 
+
+# name
+
+[./index.js:48-50](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L48-L50 "Source code on GitHub")
+
+returns the edge from the parent vertex that this vertex is refernced by
+
+Returns **Any** 
+
+# path
+
+[./index.js:64-66](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L64-L66 "Source code on GitHub")
+
+Get the path from the root vertex to this vertex
+
+Returns **Array** 
+
 # root
 
-[./index.js:37-39](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L37-L39 "Source code on GitHub")
+[./index.js:56-58](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L56-L58 "Source code on GitHub")
 
-Get the parent or root vertex from which this vertex was found by.
-Not all Vertices have root vertices, only vertice that where resolve be
-get/update have roots
+Get the root vertex
+
+Returns **Vertex** 
+
+# rootAndPath
+
+[./index.js:72-80](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L72-L80 "Source code on GitHub")
+
+Gets the root vertex and the path
+
+Returns **Array** 
 
 # serialize
 
-[./index.js:44-46](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L44-L46 "Source code on GitHub")
+[./index.js:85-87](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L85-L87 "Source code on GitHub")
 
 Returns **Promise** the promise resolves the serialized Vertex
 
 # set
 
-[./index.js:120-123](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L120-L123 "Source code on GitHub")
+[./index.js:161-171](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./index.js#L161-L171 "Source code on GitHub")
 
 Set an edge on a given path to the given vertex
 
@@ -99,24 +139,3 @@ Set an edge on a given path to the given vertex
 -   `path` **Array** 
 -   `vertex` **Vertex** 
 -   `newVertex`  
-
-# update
-
-[./index.js:173-203](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./index.js#L173-L203 "Source code on GitHub")
-
-Updates an edge on a given path . If the path does not already exist this
-will extend the path. If no value is returned then the vertex that did exist will be deleted
-
-**Parameters**
-
--   `path` **Array** 
-
-**Examples**
-
-```javascript
-rootVertex.update(path).then(([vertex, resolve]) => {
-  resolve(new Vertex({value: 'some new value'}))
-})
-```
-
-Returns **Promise** the promise resolves a vertex and a callback funtion that is used to update the vertex

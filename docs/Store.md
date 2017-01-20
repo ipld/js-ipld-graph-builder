@@ -1,6 +1,6 @@
 # batch
 
-[./store.js:72-122](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./store.js#L72-L122 "Source code on GitHub")
+[./store.js:72-122](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./store.js#L72-L122 "Source code on GitHub")
 
 flush a cache trie to the db returning a promise that resolves to a merkle
 link in the form of a [cid](https://github.com/ipfs/js-cid)
@@ -14,7 +14,7 @@ Returns **Promise**
 
 # createReadStream
 
-[./store.js:129-131](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./store.js#L129-L131 "Source code on GitHub")
+[./store.js:129-131](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./store.js#L129-L131 "Source code on GitHub")
 
 Creates a read stream returning all the Vertices in a trie given a root merkle link
 
@@ -26,7 +26,7 @@ Returns **ReadStream**
 
 # get
 
-[./store.js:50-64](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./store.js#L50-L64 "Source code on GitHub")
+[./store.js:50-64](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./store.js#L50-L64 "Source code on GitHub")
 
 resolves a [CID](https://github.com/ipfs/js-cid) to a Vertex
 
@@ -38,7 +38,7 @@ Returns **Promise**
 
 # getPath
 
-[./store.js:33-43](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./store.js#L33-L43 "Source code on GitHub")
+[./store.js:33-43](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./store.js#L33-L43 "Source code on GitHub")
 
 Fetches a Vertex from the db
 
@@ -52,7 +52,7 @@ Returns **Promise**
 
 # set
 
-[./store.js:16-25](https://github.com/wanderer/merkle-trie/blob/1b13d9d9f007ffe387a12b2faa03896220b2ecda/./store.js#L16-L25 "Source code on GitHub")
+[./store.js:16-25](https://github.com/wanderer/merkle-trie/blob/2443c55449e6daf0d782bca00b0715bfe5106a64/./store.js#L16-L25 "Source code on GitHub")
 
 Stores a vertex in the db, returning its merkle link
 
