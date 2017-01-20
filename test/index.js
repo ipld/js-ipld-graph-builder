@@ -102,7 +102,7 @@ tape('copy', async t => {
   }
 })
 
-tape.only('copy manipulating subtress', async t => {
+tape('copy manipulating subtress', async t => {
   const store = new Store()
   let root = new Vertex({store: store})
   const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
