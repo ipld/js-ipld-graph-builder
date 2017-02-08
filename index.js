@@ -28,7 +28,7 @@ module.exports = class Vertex {
     const edges = this.edges
     this.edges = new Map()
     Object.keys(edges).forEach(key => {
-      const edge = edges[key]['/']
+      const edge = edges[key].value
       this.edges.set(key, new CID(edge.version, edge.codec, new Buffer(edge.hash)))
     })
   }
