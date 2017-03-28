@@ -27,8 +27,8 @@
     "browserify": "^14.1.0",
     "coveralls": "^2.11.4",
     "documentation": "^3.0.4",
-    "istanbul": "^0.4.1",
     "standard": "^9.0.2",
+    "istanbul": "^1.1.0-alpha.1",
     "tape": "^4.6.2"
   },
   "repository": {
