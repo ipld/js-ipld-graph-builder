@@ -20,15 +20,15 @@
   "dependencies": {
     "cids": "^0.4.0",
     "imperative-trie": "^0.0.5",
-    "ipld-dag-cbor": "^0.9.0",
-    "ipld-resolver": "^0.4.2"
+    "ipld-dag-cbor": "^0.11.0",
+    "ipld-resolver": "^0.11.0"
   },
   "devDependencies": {
-    "browserify": "^13.0.0",
+    "browserify": "^14.1.0",
     "coveralls": "^2.11.4",
     "documentation": "^3.0.4",
     "istanbul": "^0.4.1",
-    "standard": "^8.5.0",
+    "standard": "^9.0.2",
     "tape": "^4.6.2"
   },
   "repository": {
