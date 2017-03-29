@@ -60,7 +60,7 @@ module.exports = class Graph {
       edge = root[name]
       if (edge && typeof edge !== 'string') {
         const link = edge['/']
-        if (typeof link === 'string' || Buffer.isBuffer(link)) {
+        if (isValidCID(link)) {
           root = edge['/'] = (await this._dag.get(new CID(link))).value
         } else if (link) {
           root = link
@@ -99,7 +99,7 @@ module.exports = class Graph {
     for (const name in root) {
       const edge = root[name]
       const link = edge['/']
-      if (typeof link === 'object') {
+      if (link && !isValidCID(link)) {
         awaiting.push(this.flush(link).then(cid => {
           edge['/'] = cid.toBaseEncodedString()
         }))
@@ -120,4 +120,8 @@ module.exports = class Graph {
   clone (root) {
     return deepcopy(root)
   }
+}
+
+function isValidCID (link) {
+  return typeof link === 'string' || Buffer.isBuffer(link)
 }

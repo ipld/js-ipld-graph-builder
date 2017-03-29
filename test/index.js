@@ -8,7 +8,7 @@ node.on('start', () => {
   tape('testing graph builder', async t => {
     const graph = new Graph(node.dag)
     const a = {
-      'some': {
+      some: {
         thing: 'nested'
       }
     }
@@ -16,11 +16,11 @@ node.on('start', () => {
       lol: 1
     }
     let expect = {
-      'some': {
-        'thing': {
-          'else': {
+      some: {
+        thing: {
+          else: {
             '/': {
-              'lol': 1
+              lol: 1
             }
           }
         }
