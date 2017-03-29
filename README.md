@@ -17,7 +17,7 @@ const IPFS = require('ipfs')
 const Graph = require('../')
 const ipfs = new IPFS()
 
-node.on('start', () => {
+ipfs.on('start', () => {
   const graph = new Graph(ipfs.dag)
   const a = {
     some: {
