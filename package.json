@@ -1,6 +1,6 @@
 {
   "name": "ipld-graph-builder",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "a merkle trie implemention that if focused on being generic and fast",
   "main": "index.js",
   "scripts": {
