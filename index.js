@@ -1,6 +1,7 @@
 const deepcopy = require('deepcopy')
-const OPTS = Symbol('options')
 const CID = require('cids')
+
+const OPTS = Symbol('options')
 
 module.exports = class Graph {
   /**

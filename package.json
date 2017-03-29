@@ -19,14 +19,10 @@
   "license": "MPL-2.0",
   "dependencies": {
     "cids": "^0.4.0",
-    "deepcopy": "^0.6.3",
-    "imperative-trie": "^0.0.5",
-    "ipfs": "^0.23.1",
-    "ipld-dag-cbor": "^0.11.0",
-    "ipld-resolver": "^0.11.0"
+    "deepcopy": "^0.6.3"
   },
   "devDependencies": {
-    "browserify": "^14.1.0",
+    "ipfs": "^0.23.1",
     "coveralls": "^2.11.4",
     "documentation": "^3.0.4",
     "standard": "^9.0.2",

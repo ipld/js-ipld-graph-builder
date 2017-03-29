@@ -50,7 +50,6 @@ node.on('start', () => {
 
     const cloneA = graph.clone(a)
     const cid = await graph.flush(a)
-    console.log(a)
     let result = await node.dag.get(cid, 'some/lol')
     t.deepEquals(result.value, 1, 'should flush to dag store')
     t.deepEquals(cloneA, expect, 'cloned A should not change')
