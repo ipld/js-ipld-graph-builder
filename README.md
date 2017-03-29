@@ -51,7 +51,13 @@ node.on('start', () => {
         >     }
         >   }
         > }
-      })
+
+        // taverse paths through merkle links given a starting vertex
+        graph.get(result, 'some/thing/else/lol', result2 => {
+          console.log(result2)
+          > 1
+        })
+     })
   })
 }
 
