@@ -58,7 +58,7 @@ node.on('start', () => {
 
 ```
 # API
-['./docs/']('./docs')
+['./docs/'](./docs)
 
 # TESTS
 `npm run tests`
