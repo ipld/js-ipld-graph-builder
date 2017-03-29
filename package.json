@@ -8,23 +8,21 @@
     "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
     "lint": "standard",
     "test": "node --harmony ./test/index.js",
-    "build:docs": "documentation --github  --shallow  -f md ./index.js > ./docs/Vertex.md && documentation --github  --shallow  -f md ./store.js > ./docs/Store.md"
+    "build:docs": "documentation --github  -f md ./index.js > ./docs/index.md"
   },
   "keywords": [
     "merkle",
-    "trie",
-    "dag"
+    "dag",
+    "ipfs"
   ],
   "author": "mjbecze <mjbecze@gmail.com>",
   "license": "MPL-2.0",
   "dependencies": {
     "cids": "^0.4.0",
-    "imperative-trie": "^0.0.5",
-    "ipld-dag-cbor": "^0.11.0",
-    "ipld-resolver": "^0.11.0"
+    "deepcopy": "^0.6.3"
   },
   "devDependencies": {
-    "browserify": "^14.1.0",
+    "ipfs": "^0.23.1",
     "coveralls": "^2.11.4",
     "documentation": "^3.0.4",
     "standard": "^9.0.2",
