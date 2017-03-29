@@ -20,7 +20,7 @@ const ipfs = new IPFS()
 node.on('start', () => {
   const graph = new Graph(ipfs.dag)
   const a = {
-    'some': {
+    some: {
       thing: 'nested'
     }
   }
