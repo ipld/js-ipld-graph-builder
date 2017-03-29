@@ -5,7 +5,7 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)  
 
-This provides an efficent way to build and manipulate IPLD DAGs as JSON. This is accomplished by only producing merkle roots when `flush`ing the DAG. If any object has a "/" property, its value will be replaces with merlke has of that value when flushed, this allows you to build object anyway you like. 
+This provides an efficent way to build and manipulate IPLD DAGs as JSON. This is accomplished by only producing merkle roots when `flush`ing the DAG. If any object has a "/" property, its value will be replaces with merlke has of that value when flushed. This allows you to build object anyway you like. 
 
 # INSTALL
 `npm install ipld-graph-builder`
@@ -58,7 +58,7 @@ node.on('start', () => {
 
 ```
 # API
-['./docs/']
+['./docs/']('./docs')
 
 # TESTS
 `npm run tests`
