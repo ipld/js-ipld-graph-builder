@@ -12,14 +12,16 @@
   },
   "keywords": [
     "merkle",
-    "trie",
-    "dag"
+    "dag",
+    "ipfs"
   ],
   "author": "mjbecze <mjbecze@gmail.com>",
   "license": "MPL-2.0",
   "dependencies": {
     "cids": "^0.4.0",
+    "deepcopy": "^0.6.3",
     "imperative-trie": "^0.0.5",
+    "ipfs": "^0.23.1",
     "ipld-dag-cbor": "^0.11.0",
     "ipld-resolver": "^0.11.0"
   },

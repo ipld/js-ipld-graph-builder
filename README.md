@@ -5,7 +5,7 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)  
 
-This provides an efficent way to build and manipulate IPLD DAGs.
+This provides an efficent way to build and manipulate IPLD DAGs as JSON. This is accomplished by only producing merkle roots when `flush`ing the DAG. If any object has a "/" property, its value will be replaces with merlke has of that value when flushed, this allows you to build object anyway you like. 
 
 # INSTALL
 `npm install ipld-graph-builder`
@@ -13,47 +13,52 @@ This provides an efficent way to build and manipulate IPLD DAGs.
 # USAGE
 
 ```javascript
-const store = new Store()
-const newVertex = new Vertex({
-  store: store
-})
-const path = ['not', 'all', 'those', 'who', 'wanderer', 'are', 'lost']
-const value = 'all that is gold does not glitter'
+const IPFS = require('ipfs')
+const Graph = require('../')
+const ipfs = new IPFS()
 
-newVertex.set(path, new Vertex({
-  value: value
-}))
+node.on('start', () => {
+  const graph = new Graph(ipfs.dag)
+  const a = {
+    'some': {
+      thing: 'nested'
+    }
+  }
+  const b = {
+    lol: 1
+  }
 
-newVertex.get(path)
-.then(vertex => {
-  // retrieves the vertex that was stored
-  // saves all the work done on the trie to the store
-  // and return the merkle link to the root vertex
-  return newVertex.flush()
-}).then(cid => {
-  // get the vertex from the store
-  return store.get(cid)
-}).then(vertex => {
-  // the vertex returned from the store
-  return vertex.get(path)
-}).then(vertex => {
-  console.log(vertex.value) // all that is gold does not glitter
-})
+  graph.set(a, 'some/thing/else', b).then(result => {
+      // set "patches" together two objects
+      console.log(result)
+      > 'some': {
+      >   'thing': {
+      >     'else': {
+      >       '/': {
+      >         'lol': 1
+      >       }
+      >     }
+      >   }
+      > }
+
+      // flush replaces the links with merkle links
+      graph.flush(result).then(cid => {
+        console.log(result)
+        > 'some': {
+        >   'thing': {
+        >     'else': {
+        >       '/': 'zdpuAtQW2gsryPptovnqM7vweN5Jk9iEssJbfMKWY7F1eyh8j'
+        >     }
+        >   }
+        > }
+      })
+  })
+}
+
+
 ```
-# NOTES
-Operations that mutate the trie (set and delete) are synchronous while operations
-that return values (get, update) are asynchronous. This is because writing
-operations are written to a cache. And the cache is only written to the
-store when `flush` is called. The idea here is to avoid doing lookups and
-hashing until it is absolutely necessary.
-
-Store is just a instance of [ipld-resolver](https://github.com/ipld/js-ipld-resolver)
-that uses promises instead of callbacks.
-
-
 # API
- - [Vertex](./docs/Vertex.md)  
- - [Store](./docs/Store.md)
+['./docs/']
 
 # TESTS
 `npm run tests`
