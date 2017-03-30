@@ -83,9 +83,8 @@ module.exports = class Graph {
    */
   async get (root, path) {
     path = path.split('/')
-    const last = path.pop()
     const {value} = await this._get(root, path)
-    return value[last]
+    return value
   }
 
   /**

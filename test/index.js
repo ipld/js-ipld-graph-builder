@@ -3,6 +3,9 @@ const IPFS = require('ipfs')
 const Graph = require('../')
 
 const node = new IPFS()
+node.on('error', err => {
+  console.log(err)
+})
 
 node.on('start', () => {
   tape('testing graph builder', async t => {
@@ -40,13 +43,16 @@ node.on('start', () => {
     t.deepEquals(a, expect, 'should set a value correctly')
     await graph.set(a, 'some', b)
     expect = {
-      'some': {
+      some: {
         '/': {
           'lol': 1
         }
       }
     }
     t.deepEquals(a, expect, 'should set a value correctly')
+
+    const some = await graph.get(expect, 'some')
+    t.deepEquals(some, {'lol': 1}, 'should traverse objects with links')
 
     const cloneA = graph.clone(a)
     const cid = await graph.flush(a)
