@@ -94,11 +94,6 @@ module.exports = class Graph {
     })
   }
 
-  /**
-   * clones an Object via a deeep copy
-   * @param {Object} root
-   * return {Object}
-   */
   clone (root) {
     return deepcopy(root)
   }
