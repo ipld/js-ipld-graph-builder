@@ -105,5 +105,5 @@ module.exports = class Graph {
 }
 
 function isValidCID (link) {
-  return typeof link === 'string' || Buffer.isBuffer(link) && !link.options
+  return (typeof link === 'string' || Buffer.isBuffer(link)) && !link.options
 }
