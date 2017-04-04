@@ -1,33 +1,13 @@
 const deepcopy = require('deepcopy')
 const CID = require('cids')
-
-const OPTS = Symbol('options')
+const multihashes = require('multihashes')
 
 module.exports = class Graph {
   /**
    * @param {Object} ipfsDag an instance of [ipfs.dag](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dag-api)
    */
-  constructor (ipfsDag, opts = {format: 'dag-cbor', hashAlg: 'sha2-256'}) {
+  constructor (ipfsDag) {
     this._dag = ipfsDag
-    this._opts = opts
-  }
-
-  /**
-   * sets [dag.put](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput) options on a JSON object
-   * @param {Object} obj
-   * @param {Object} opts
-   */
-  setOptions (obj, opts) {
-    obj[OPTS] = opts
-  }
-
-  /**
-   * get options assiocated with an Ojbect
-   * @param {Object} obj
-   * @return {Object}
-   */
-  getOptions (obj) {
-    return obj[OPTS] || this._opts
   }
 
   /**
@@ -61,7 +41,10 @@ module.exports = class Graph {
       if (edge && typeof edge !== 'string') {
         const link = edge['/']
         if (isValidCID(link)) {
-          root = edge['/'] = (await this._dag.get(new CID(link))).value
+          const cid = new CID(link)
+          edge.format = cid.codec
+          edge.hashAlg = multihashes.decode(cid.multihash).name
+          root = edge['/'] = (await this._dag.get(cid)).value
         } else if (link) {
           root = link
         } else {
@@ -93,7 +76,7 @@ module.exports = class Graph {
    * @param {Object} opts - encoding options for [`dag.put`](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput)
    * @return {Promise}
    */
-  async flush (root, opts) {
+  async flush (root) {
     const awaiting = []
     for (const name in root) {
       const edge = root[name]
@@ -105,10 +88,10 @@ module.exports = class Graph {
       }
     }
     await Promise.all(awaiting)
-    opts = opts || this.getOptions(root)
-    delete root[OPTS]
-
-    return this._dag.put(root, opts)
+    return this._dag.put(root, root.options || {
+      format: 'dag-cbor',
+      hashAlg: 'sha2-256'
+    })
   }
 
   /**
@@ -122,5 +105,5 @@ module.exports = class Graph {
 }
 
 function isValidCID (link) {
-  return typeof link === 'string' || Buffer.isBuffer(link)
+  return typeof link === 'string' || Buffer.isBuffer(link) && !link.options
 }

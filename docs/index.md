@@ -1,6 +1,6 @@
 # clone
 
-[index.js:120-122](https://github.com/ipld/js-ipld-graph-builder/blob/864d8678199240d3fa8da451f5b09a2d689cb736/index.js#L120-L122 "Source code on GitHub")
+[index.js:119-121](https://github.com/ipld/js-ipld-graph-builder/blob/31f73c8276c3448ebe68905985e36c154da2b156/index.js#L119-L121 "Source code on GitHub")
 
 clones an Object via a deeep copy
 
@@ -10,7 +10,7 @@ clones an Object via a deeep copy
 
 # constructor
 
-[index.js:10-13](https://github.com/ipld/js-ipld-graph-builder/blob/864d8678199240d3fa8da451f5b09a2d689cb736/index.js#L10-L13 "Source code on GitHub")
+[index.js:10-13](https://github.com/ipld/js-ipld-graph-builder/blob/31f73c8276c3448ebe68905985e36c154da2b156/index.js#L10-L13 "Source code on GitHub")
 
 **Parameters**
 
@@ -19,7 +19,7 @@ clones an Object via a deeep copy
 
 # flush
 
-[index.js:97-113](https://github.com/ipld/js-ipld-graph-builder/blob/864d8678199240d3fa8da451f5b09a2d689cb736/index.js#L97-L113 "Source code on GitHub")
+[index.js:96-112](https://github.com/ipld/js-ipld-graph-builder/blob/31f73c8276c3448ebe68905985e36c154da2b156/index.js#L96-L112 "Source code on GitHub")
 
 flush an object to ipfs returning the resulting CID in a promise
 
@@ -32,7 +32,7 @@ Returns **Promise**
 
 # get
 
-[index.js:84-89](https://github.com/ipld/js-ipld-graph-builder/blob/864d8678199240d3fa8da451f5b09a2d689cb736/index.js#L84-L89 "Source code on GitHub")
+[index.js:84-88](https://github.com/ipld/js-ipld-graph-builder/blob/31f73c8276c3448ebe68905985e36c154da2b156/index.js#L84-L88 "Source code on GitHub")
 
 traverses an object's path and returns the resulting value in a Promise
 
@@ -45,7 +45,7 @@ Returns **Promise**
 
 # getOptions
 
-[index.js:29-31](https://github.com/ipld/js-ipld-graph-builder/blob/864d8678199240d3fa8da451f5b09a2d689cb736/index.js#L29-L31 "Source code on GitHub")
+[index.js:29-31](https://github.com/ipld/js-ipld-graph-builder/blob/31f73c8276c3448ebe68905985e36c154da2b156/index.js#L29-L31 "Source code on GitHub")
 
 get options assiocated with an Ojbect
 
@@ -57,7 +57,7 @@ Returns **Object**
 
 # set
 
-[index.js:40-54](https://github.com/ipld/js-ipld-graph-builder/blob/864d8678199240d3fa8da451f5b09a2d689cb736/index.js#L40-L54 "Source code on GitHub")
+[index.js:40-54](https://github.com/ipld/js-ipld-graph-builder/blob/31f73c8276c3448ebe68905985e36c154da2b156/index.js#L40-L54 "Source code on GitHub")
 
 sets a value on a root object given its path
 
@@ -71,7 +71,7 @@ Returns **Promise**
 
 # setOptions
 
-[index.js:20-22](https://github.com/ipld/js-ipld-graph-builder/blob/864d8678199240d3fa8da451f5b09a2d689cb736/index.js#L20-L22 "Source code on GitHub")
+[index.js:20-22](https://github.com/ipld/js-ipld-graph-builder/blob/31f73c8276c3448ebe68905985e36c154da2b156/index.js#L20-L22 "Source code on GitHub")
 
 sets [dag.put](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput) options on a JSON object
 

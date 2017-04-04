@@ -8,7 +8,7 @@
     "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
     "lint": "standard",
     "test": "node --harmony ./test/index.js",
-    "build:docs": "documentation --github  -f md ./index.js > ./docs/index.md"
+    "build:docs": "documentation ./index.js --github --sort-order source -f md  > ./docs/index.md"
   },
   "keywords": [
     "merkle",
@@ -19,7 +19,8 @@
   "license": "MPL-2.0",
   "dependencies": {
     "cids": "^0.4.0",
-    "deepcopy": "^0.6.3"
+    "deepcopy": "^0.6.3",
+    "multihashes": "^0.4.5"
   },
   "devDependencies": {
     "ipfs": "^0.23.1",

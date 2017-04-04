@@ -30,15 +30,6 @@ node.on('start', () => {
       }
     }
 
-    const opts = {
-      format: 'dag-cbor',
-      hashAlg: 'sha2-256'
-    }
-
-    graph.setOptions(a, opts)
-    const optsB = graph.getOptions(a)
-    t.deepEquals(opts, optsB, 'should set and get options')
-
     await graph.set(a, 'some/thing/else', b)
     t.deepEquals(a, expect, 'should set a value correctly')
     await graph.set(a, 'some', b)
