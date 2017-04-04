@@ -76,7 +76,7 @@ module.exports = class Graph {
    * @param {Object} opts - encoding options for [`dag.put`](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput)
    * @return {Promise}
    */
-  async flush (root) {
+  async flush (root, opts) {
     const awaiting = []
     for (const name in root) {
       const edge = root[name]
@@ -88,7 +88,7 @@ module.exports = class Graph {
       }
     }
     await Promise.all(awaiting)
-    return this._dag.put(root, root.options || {
+    return this._dag.put(root, opts || root.options || {
       format: 'dag-cbor',
       hashAlg: 'sha2-256'
     })
