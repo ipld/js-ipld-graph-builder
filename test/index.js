@@ -45,11 +45,9 @@ node.on('start', () => {
     const some = await graph.get(expect, 'some')
     t.deepEquals(some, {'lol': 1}, 'should traverse objects with links')
 
-    const cloneA = graph.clone(a)
     const cid = await graph.flush(a)
     let result = await node.dag.get(cid, 'some/lol')
     t.deepEquals(result.value, 1, 'should flush to dag store')
-    t.deepEquals(cloneA, expect, 'cloned A should not change')
 
     result = await node.dag.get(cid)
 

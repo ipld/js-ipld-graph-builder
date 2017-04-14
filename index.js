@@ -1,4 +1,3 @@
-const deepcopy = require('deepcopy')
 const CID = require('cids')
 const multihashes = require('multihashes')
 
@@ -92,10 +91,6 @@ module.exports = class Graph {
       format: 'dag-cbor',
       hashAlg: 'sha2-256'
     })
-  }
-
-  clone (root) {
-    return deepcopy(root)
   }
 }
 
