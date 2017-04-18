@@ -22,22 +22,30 @@ module.exports = class Graph {
       '/': value
     }
     const last = path.pop()
-    let {value: foundVal, remainderPath: remainder} = await this._get(root, path)
-    if (remainder) {
-      for (const elem of remainder) {
-        foundVal = foundVal[elem] = {}
-      }
+    let {value: foundVal, remainderPath: remainder, parent} = await this._get(root, path)
+    // if the found value is a litaral attach an object to the parent object
+    if (typeof foundVal !== 'object') {
+      const pos = path.length - remainder.length - 1
+      const name = path.slice(pos, pos + 1)[0]
+      foundVal = parent[name] = {}
+    }
+    // extend the path for the left over path names
+    for (const name of remainder) {
+      foundVal = foundVal[name] = {}
     }
     foundVal[last] = value
     return root
   }
 
   async _get (root, path) {
+    path = path.slice(0)
     let edge
+    let parent = root
     while (path.length) {
       const name = path.shift()
       edge = root[name]
-      if (edge && typeof edge !== 'string') {
+      if (edge) {
+        parent = root
         const link = edge['/']
         if (isValidCID(link)) {
           const cid = new CID(link)
@@ -51,10 +59,18 @@ module.exports = class Graph {
         }
       } else {
         path.unshift(name)
-        return {value: root, remainderPath: path}
+        return {
+          value: root,
+          remainderPath: path,
+          parent: parent
+        }
       }
     }
-    return {value: root}
+    return {
+      value: root,
+      remainderPath: [],
+      parent: parent
+    }
   }
 
   /**
