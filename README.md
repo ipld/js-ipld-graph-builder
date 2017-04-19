@@ -14,7 +14,7 @@ This provides an efficent way to build and manipulate IPLD DAGs as JSON. This is
 
 ```javascript
 const IPFS = require('ipfs')
-const Graph = require('../')
+const Graph = require('./')
 const ipfs = new IPFS()
 
 ipfs.on('start', () => {
@@ -29,37 +29,34 @@ ipfs.on('start', () => {
   }
 
   graph.set(a, 'some/thing/else', b).then(result => {
-      // set "patches" together two objects
+    // set "patches" together two objects
+    console.log(JSON.stringify(result))
+    > {
+    >  "some": {
+    >    "thing": {
+    >      "else": {
+    >        "/": {
+    >          "lol": 1
+    >        }
+    >      }
+    >    }
+    >  }
+    >}
+
+
+    // flush replaces the links with merkle links, resulting in a single root hash
+    graph.flush(result).then((result) => {
       console.log(result)
-      > 'some': {
-      >   'thing': {
-      >     'else': {
-      >       '/': {
-      >         'lol': 1
-      >       }
-      >     }
-      >   }
-      > }
+      > { '/': 'zdpuAqnGt7k49xSfawetvZXSLm4b1vvkSMnDrk4NFqnCCnW5V' }
 
-      // flush replaces the links with merkle links
-      graph.flush(result).then(cid => {
-        console.log(result)
-        > 'some': {
-        >   'thing': {
-        >     'else': {
-        >       '/': 'zdpuAtQW2gsryPptovnqM7vweN5Jk9iEssJbfMKWY7F1eyh8j'
-        >     }
-        >   }
-        > }
-
-        // taverse paths through merkle links given a starting vertex
-        graph.get(result, 'some/thing/else/lol').then(result2 => {
-          console.log(result2)
-          > 1
-        })
-     })
+      // taverse paths through merkle links given a starting vertex
+      graph.get(result, 'some/thing/else').then(result2 => {
+        console.log(result2)
+        > { lol: 1 }
+      })
+    })
   })
-}
+})
 ```
 Additonally you can define the encoding of each link by adding the follow `options` property to un-merklized links. `options` will be used as the options argument for [`DAG.put`](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput)
 ```
