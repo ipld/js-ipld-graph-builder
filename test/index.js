@@ -100,6 +100,9 @@ node.on('start', () => {
     await graph.flush(a)
     t.deepEquals(a, expectedA, 'should flush correctly')
     t.deepEquals(b, expectedB, 'should flush correctly')
+
+    const val = await graph.get(a, 'thing/two/lol')
+    t.equals(val, 'test', 'should find the corret value')
     t.end()
   })
   tape('testing setting leaf values', async t => {

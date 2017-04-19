@@ -31,12 +31,16 @@ module.exports = class Graph {
    * @return {Promise}
    */
   async set (root, path, value) {
-    path = path.split('/')
     value = {
       '/': value
     }
+    path = path.split('/')
     const last = path.pop()
-    let {value: foundVal, remainderPath: remainder, parent} = await this._get(root, path)
+    let {
+      value: foundVal,
+      remainderPath: remainder,
+      parent
+    } = await this._get(root, path)
     // if the found value is a litaral attach an object to the parent object
     if (!isObject(foundVal)) {
       const pos = path.length - remainder.length - 1
@@ -52,31 +56,37 @@ module.exports = class Graph {
   }
 
   async _get (root, path) {
-    path = path.slice(0)
-    let edge
     let parent = root
-    while (path.length) {
-      const name = path.shift()
-      edge = root[name]
-      if (edge) {
-        parent = root
-        const link = edge['/']
+    path = path.slice(0)
+    while (1) {
+      const link = root['/']
+      // if there is a link, traverse throught it
+      if (link) {
         if (isValidCID(link)) {
           const cid = new CID(link)
-          edge.format = cid.codec
-          edge.hashAlg = multihashes.decode(cid.multihash).name
-          root = edge['/'] = (await this._dag.get(cid)).value
-        } else if (link) {
-          root = link
+          root.format = cid.codec
+          root.hashAlg = multihashes.decode(cid.multihash).name
+          root = root['/'] = (await this._dag.get(cid)).value
         } else {
-          root = edge
+          root = link
         }
       } else {
-        path.unshift(name)
-        return {
-          value: root,
-          remainderPath: path,
-          parent: parent
+        // traverse through POJOs
+        if (!path.length) {
+          break
+        }
+        const name = path.shift()
+        const edge = root[name]
+        if (edge) {
+          parent = root
+          root = edge
+        } else {
+          path.unshift(name)
+          return {
+            value: root,
+            remainderPath: path,
+            parent: parent
+          }
         }
       }
     }
