@@ -1,6 +1,6 @@
 const tape = require('tape')
 const IPFS = require('ipfs')
-const cid = require('cids')
+const CID = require('cids')
 const Graph = require('../')
 
 const node = new IPFS()
@@ -49,10 +49,10 @@ node.on('start', () => {
     t.deepEquals(some, {'lol': 'test'}, 'should traverse objects with links')
 
     const cid = await graph.flush(a)
-    let result = await node.dag.get(cid, 'some/lol')
+    let result = await node.dag.get(new CID(cid['/']), 'some/lol')
     t.deepEquals(result.value, 'test', 'should flush to dag store')
 
-    result = await node.dag.get(cid)
+    result = await node.dag.get(new CID(cid['/']))
 
     let getResult = await graph.get(result.value, 'some/lol')
     t.deepEquals(getResult, 'test', 'should get a value correctly')
@@ -60,6 +60,46 @@ node.on('start', () => {
     getResult = await graph.get(expect, 'some/lol')
     t.deepEquals(getResult, 'test', 'should get a value correctly')
 
+    t.end()
+  })
+
+  tape('flushing multiple leaf values', async t => {
+    const graph = new Graph(node.dag)
+    const a = {
+      '/': {
+        thing: {
+          two: {
+            '/': {
+              lol: 'test'
+            }
+          },
+          else: {
+            '/': {
+              lol: 'test'
+            }
+          }
+        }
+      }
+    }
+
+    const b = a['/']
+    const expectedA = {
+      '/': 'zdpuAncHcnA7MJnwFrxY8JxFQ5i8secxvWcWuLiktwatTgpxf'
+    }
+    const expectedB = {
+      thing: {
+        two: {
+          '/': 'zdpuB1BH4aTUFEXbCxESk41PQieE1fLcpPcmFnqd89ZPtJWaf'
+        },
+        else: {
+          '/': 'zdpuB1BH4aTUFEXbCxESk41PQieE1fLcpPcmFnqd89ZPtJWaf'
+        }
+      }
+    }
+
+    await graph.flush(a)
+    t.deepEquals(a, expectedA, 'should flush correctly')
+    t.deepEquals(b, expectedB, 'should flush correctly')
     t.end()
   })
   tape('testing setting leaf values', async t => {

@@ -1,6 +1,20 @@
 const CID = require('cids')
 const multihashes = require('multihashes')
 
+function isValidCID (link) {
+  return (typeof link === 'string' || Buffer.isBuffer(link)) && !link.options
+}
+
+function isObject (obj) {
+  return typeof obj === 'object' && obj !== null
+}
+
+function clearObject (myObject) {
+  for (var member in myObject) {
+    delete myObject[member]
+  }
+}
+
 module.exports = class Graph {
   /**
    * @param {Object} ipfsDag an instance of [ipfs.dag](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dag-api)
@@ -24,7 +38,7 @@ module.exports = class Graph {
     const last = path.pop()
     let {value: foundVal, remainderPath: remainder, parent} = await this._get(root, path)
     // if the found value is a litaral attach an object to the parent object
-    if (typeof foundVal !== 'object') {
+    if (!isObject(foundVal)) {
       const pos = path.length - remainder.length - 1
       const name = path.slice(pos, pos + 1)[0]
       foundVal = parent[name] = {}
@@ -85,6 +99,26 @@ module.exports = class Graph {
     return value
   }
 
+  async _flush (root, opts) {
+    const awaiting = []
+    if (isObject(root)) {
+      for (const name in root) {
+        const edge = root[name]
+        awaiting.push(this._flush(edge))
+      }
+    }
+    await Promise.all(awaiting)
+    const link = root['/']
+    if (link && !isValidCID(link)) {
+      return this._dag.put(link, opts || root.options || {
+        format: 'dag-cbor',
+        hashAlg: 'sha2-256'
+      }).then(cid => {
+        root['/'] = cid.toBaseEncodedString()
+      })
+    }
+  }
+
   /**
    * flush an object to ipfs returning the resulting CID in a promise
    * @param {Object} root
@@ -92,24 +126,12 @@ module.exports = class Graph {
    * @return {Promise}
    */
   async flush (root, opts) {
-    const awaiting = []
-    for (const name in root) {
-      const edge = root[name]
-      const link = edge['/']
-      if (link && !isValidCID(link)) {
-        awaiting.push(this.flush(link).then(cid => {
-          edge['/'] = cid.toBaseEncodedString()
-        }))
-      }
+    if (!root['/']) {
+      const oldRoot = Object.assign({}, root)
+      clearObject(root)
+      root['/'] = oldRoot
     }
-    await Promise.all(awaiting)
-    return this._dag.put(root, opts || root.options || {
-      format: 'dag-cbor',
-      hashAlg: 'sha2-256'
-    })
+    await this._flush(root, opts)
+    return root
   }
-}
-
-function isValidCID (link) {
-  return (typeof link === 'string' || Buffer.isBuffer(link)) && !link.options
 }
