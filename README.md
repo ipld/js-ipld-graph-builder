@@ -5,7 +5,7 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)  
 
-This provides an efficent way to build and manipulate IPLD DAGs as JSON. This is accomplished by only producing merkle roots when `flush`ing the DAG. If any object has a "/" property, its value will be replaces with merkle hash of that value when flushed. This allows you to build object anyway you like. 
+This provides an efficent way to build and manipulate IPLD DAGs as JSON. This is accomplished by only producing merkle roots when `flush`ing the DAG. If any object has a "/" property, its value will be replaced with the merkle hash of that value when flushed. This allows you to build object anyway you like. 
 
 # INSTALL
 `npm install ipld-graph-builder`
@@ -58,7 +58,7 @@ ipfs.on('start', () => {
   })
 })
 ```
-Additonally you can define the encoding of each link by adding the follow `options` property to un-merklized links. `options` will be used as the options argument for [`DAG.put`](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput)
+Additonally you can define the encoding of each link by adding the follow `options` property to un-merklized links. `options` will be used as the options argument for [`DAG.put`](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput). For Example:
 ```
 {
   'my-link': {
