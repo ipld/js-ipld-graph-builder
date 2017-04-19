@@ -23,14 +23,22 @@ module.exports = class Graph {
     this._dag = ipfsDag
   }
 
+  async _loadCID (node, link) {
+    const cid = new CID(link)
+    node.options = {}
+    node.options.format = cid.codec
+    node.options.hashAlg = multihashes.decode(cid.multihash).name
+    node['/'] = (await this._dag.get(cid)).value
+  }
+
   /**
    * sets a value on a root object given its path
-   * @param {Object} root
+   * @param {Object} node
    * @param {String} path
    * @param {*} value
    * @return {Promise}
    */
-  async set (root, path, value) {
+  async set (node, path, value) {
     value = {
       '/': value
     }
@@ -40,7 +48,7 @@ module.exports = class Graph {
       value: foundVal,
       remainderPath: remainder,
       parent
-    } = await this._get(root, path)
+    } = await this._get(node, path)
     // if the found value is a litaral attach an object to the parent object
     if (!isObject(foundVal)) {
       const pos = path.length - remainder.length - 1
@@ -52,38 +60,34 @@ module.exports = class Graph {
       foundVal = foundVal[name] = {}
     }
     foundVal[last] = value
-    return root
+    return node
   }
 
-  async _get (root, path) {
-    let parent = root
+  async _get (node, path) {
+    let parent = node
     path = path.slice(0)
     while (1) {
-      const link = root['/']
+      const link = node['/']
       // if there is a link, traverse throught it
-      if (link) {
-        if (isValidCID(link)) {
-          const cid = new CID(link)
-          root.format = cid.codec
-          root.hashAlg = multihashes.decode(cid.multihash).name
-          root = root['/'] = (await this._dag.get(cid)).value
-        } else {
-          root = link
-        }
+      if (isValidCID(link)) {
+        await this._loadCID(node, link)
+      } else if (link) {
+        // link is a POJO
+        node = link
       } else {
         // traverse through POJOs
         if (!path.length) {
           break
         }
         const name = path.shift()
-        const edge = root[name]
+        const edge = node[name]
         if (edge) {
-          parent = root
-          root = edge
+          parent = node
+          node = edge
         } else {
           path.unshift(name)
           return {
-            value: root,
+            value: node,
             remainderPath: path,
             parent: parent
           }
@@ -91,7 +95,7 @@ module.exports = class Graph {
       }
     }
     return {
-      value: root,
+      value: node,
       remainderPath: [],
       parent: parent
     }
@@ -99,49 +103,73 @@ module.exports = class Graph {
 
   /**
    * traverses an object's path and returns the resulting value in a Promise
-   * @param {Object} root
+   * @param {Object} node
    * @param {String} path
    * @return {Promise}
    */
-  async get (root, path) {
+  async get (node, path) {
     path = path.split('/')
-    const {value} = await this._get(root, path)
+    const {value} = await this._get(node, path)
     return value
   }
 
-  async _flush (root, opts) {
+  /**
+   * Resolves all the links in an object and does so recusivly for N `level`
+   * @param {Object} node
+   * @param {Integer} levels
+   * @return {Promise}
+   */
+  async tree (node, levels = 1) {
+    const link = node['/']
+    if (isValidCID(link)) {
+      await this._loadCID(node, link)
+    }
+
+    if (levels && isObject(node)) {
+      levels--
+      const promises = []
+      for (const name in node) {
+        const edge = node[name]
+        promises.push(this.tree(edge, levels))
+      }
+      await Promise.all(promises)
+    }
+    return node
+  }
+
+  async _flush (node, opts) {
     const awaiting = []
-    if (isObject(root)) {
-      for (const name in root) {
-        const edge = root[name]
+    if (isObject(node)) {
+      for (const name in node) {
+        const edge = node[name]
         awaiting.push(this._flush(edge))
       }
     }
     await Promise.all(awaiting)
-    const link = root['/']
+    const link = node['/']
     if (link && !isValidCID(link)) {
-      return this._dag.put(link, opts || root.options || {
+      return this._dag.put(link, opts || node.options || {
         format: 'dag-cbor',
         hashAlg: 'sha2-256'
       }).then(cid => {
-        root['/'] = cid.toBaseEncodedString()
+        node['/'] = cid.toBaseEncodedString()
       })
     }
   }
 
   /**
    * flush an object to ipfs returning the resulting CID in a promise
-   * @param {Object} root
+   * @param {Object} node
    * @param {Object} opts - encoding options for [`dag.put`](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput)
    * @return {Promise}
    */
-  async flush (root, opts) {
-    if (!root['/']) {
-      const oldRoot = Object.assign({}, root)
-      clearObject(root)
-      root['/'] = oldRoot
+  async flush (node, opts) {
+    if (!node['/']) {
+      const oldRoot = Object.assign({}, node)
+      clearObject(node)
+      node['/'] = oldRoot
     }
-    await this._flush(root, opts)
-    return root
+    await this._flush(node, opts)
+    return node
   }
 }
