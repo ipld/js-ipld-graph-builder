@@ -1,5 +1,6 @@
 const CID = require('cids')
 const multihashes = require('multihashes')
+const assert = require('assert')
 
 function isValidCID (link) {
   return (typeof link === 'string' || Buffer.isBuffer(link)) && !link.options
@@ -20,6 +21,7 @@ module.exports = class Graph {
    * @param {Object} ipfsDag an instance of [ipfs.dag](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dag-api)
    */
   constructor (ipfsDag) {
+    assert(ipfsDag, 'ipld-graph must have an instance of ipfs.dag')
     this._dag = ipfsDag
   }
 
