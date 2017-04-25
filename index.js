@@ -3,7 +3,12 @@ const multihashes = require('multihashes')
 const assert = require('assert')
 
 function isValidCID (link) {
-  return (typeof link === 'string' || Buffer.isBuffer(link)) && !link.options
+  try {
+    CID.isCID(new CID(link))
+  } catch (e) {
+    return false
+  }
+  return true
 }
 
 function isObject (obj) {
@@ -139,23 +144,22 @@ module.exports = class Graph {
     return node
   }
 
-  async _flush (node, opts) {
+  async _flush (node, opts = {format: 'dag-cbor', hashAlg: 'sha2-256'}) {
     const awaiting = []
     if (isObject(node)) {
       for (const name in node) {
         const edge = node[name]
         awaiting.push(this._flush(edge))
       }
-    }
-    await Promise.all(awaiting)
-    const link = node['/']
-    if (link && !isValidCID(link)) {
-      return this._dag.put(link, opts || node.options || {
-        format: 'dag-cbor',
-        hashAlg: 'sha2-256'
-      }).then(cid => {
-        node['/'] = cid.toBaseEncodedString()
-      })
+
+      await Promise.all(awaiting)
+      const link = node['/']
+
+      if (link !== undefined && !isValidCID(link)) {
+        return this._dag.put(link, node.options || opts).then(cid => {
+          node['/'] = cid.toBaseEncodedString()
+        })
+      }
     }
   }
 

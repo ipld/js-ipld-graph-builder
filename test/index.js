@@ -174,6 +174,31 @@ node.on('start', () => {
     }
     t.deepEquals(a, expect, 'should set a value correctly')
 
+    t.end()
+  })
+
+  tape('failure cases', async t => {
+    const graph = new Graph(node.dag)
+    const value = {'/': {
+      id: {
+        nonce: Buffer.from([0]),
+        parent: {
+          '/': null
+        }
+      },
+      type: 'test',
+      vm: {
+        '/': ''
+      }
+    }}
+
+    const expected = {
+      '/': 'zdpuAvtdKSdBZgMcRa7VG6rrAPBu77LbainVF6oNEEE8cp8yW'
+    }
+
+    await graph.flush(value)
+    t.deepEquals(value, expected)
+
     node.stop(() => {
       t.end()
       process.exit()
