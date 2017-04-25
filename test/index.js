@@ -179,18 +179,20 @@ node.on('start', () => {
 
   tape('failure cases', async t => {
     const graph = new Graph(node.dag)
-    const value = {'/': {
-      id: {
-        nonce: Buffer.from([0]),
-        parent: {
-          '/': null
+    const value = {
+      '/': {
+        id: {
+          nonce: Buffer.from([0]),
+          parent: {
+            '/': null
+          }
+        },
+        type: 'test',
+        vm: {
+          '/': ''
         }
-      },
-      type: 'test',
-      vm: {
-        '/': ''
       }
-    }}
+    }
 
     const expected = {
       '/': 'zdpuAvtdKSdBZgMcRa7VG6rrAPBu77LbainVF6oNEEE8cp8yW'
@@ -198,6 +200,18 @@ node.on('start', () => {
 
     await graph.flush(value)
     t.deepEquals(value, expected)
+
+    const testGet = {
+      '/': {
+        nonce: Buffer.from([0]),
+        parent: {
+          '/': null
+        }
+      }
+    }
+
+    const result = await graph.get(testGet, 'parent')
+    t.equals(result, null)
 
     node.stop(() => {
       t.end()

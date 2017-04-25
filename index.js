@@ -78,10 +78,11 @@ module.exports = class Graph {
       // if there is a link, traverse throught it
       if (isValidCID(link)) {
         await this._loadCID(node, link)
-      } else if (link) {
-        // link is a POJO
-        node = link
       } else {
+        if (link !== undefined) {
+          // link is a POJO
+          node = link
+        }
         // traverse through POJOs
         if (!path.length) {
           break
