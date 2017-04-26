@@ -236,10 +236,19 @@ node.on('start', () => {
       }
     }
 
-    const result = await graph.get(testGet, 'parent')
+    let result = await graph.get(testGet, 'parent')
     t.equals(result, null)
     await graph.tree(expected, Infinity)
     t.deepEquals(expected, expectedTree, 'tree should travers graph with null leafs')
+
+    const singlePath = {
+      '/': {
+        parent: null
+      }
+    }
+
+    result = await graph.get(singlePath, 'parent')
+    t.equals(result, null, 'should get null value')
 
     node.stop(() => {
       t.end()

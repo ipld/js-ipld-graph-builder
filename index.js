@@ -56,6 +56,7 @@ module.exports = class Graph {
       remainderPath: remainder,
       parent
     } = await this._get(node, path)
+
     // if the found value is a litaral attach an object to the parent object
     if (!isObject(foundVal)) {
       const pos = path.length - remainder.length - 1
@@ -68,6 +69,18 @@ module.exports = class Graph {
     }
     foundVal[last] = value
     return node
+  }
+
+  /**
+   * traverses an object's path and returns the resulting value in a Promise
+   * @param {Object} node
+   * @param {String} path
+   * @return {Promise}
+   */
+  async get (node, path) {
+    path = path.split('/')
+    const {value} = await this._get(node, path)
+    return value
   }
 
   async _get (node, path) {
@@ -89,36 +102,19 @@ module.exports = class Graph {
         }
         const name = path.shift()
         const edge = node[name]
-        if (edge) {
+        node = edge
+        if (isObject(edge)) {
           parent = node
-          node = edge
         } else {
-          path.unshift(name)
-          return {
-            value: node,
-            remainderPath: path,
-            parent: parent
-          }
+          break
         }
       }
     }
     return {
       value: node,
-      remainderPath: [],
+      remainderPath: path,
       parent: parent
     }
-  }
-
-  /**
-   * traverses an object's path and returns the resulting value in a Promise
-   * @param {Object} node
-   * @param {String} path
-   * @return {Promise}
-   */
-  async get (node, path) {
-    path = path.split('/')
-    const {value} = await this._get(node, path)
-    return value
   }
 
   /**
