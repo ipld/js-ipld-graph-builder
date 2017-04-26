@@ -154,7 +154,12 @@ module.exports = class Graph {
       const link = node['/']
 
       if (link !== undefined && !isValidCID(link)) {
-        return this._dag.put(link, node.options || opts).then(cid => {
+        let options = opts
+        if (isObject(link)) {
+          options = link.options || opts
+          delete link.options
+        }
+        return this._dag.put(link, options).then(cid => {
           node['/'] = cid.toBaseEncodedString()
         })
       }
