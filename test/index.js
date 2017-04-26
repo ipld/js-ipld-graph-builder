@@ -194,6 +194,32 @@ node.on('start', () => {
       }
     }
 
+    const expectedTree = {
+      '/': {
+        'id': {
+          'nonce': Buffer.from([0]),
+          'parent': {
+            '/': null,
+            'options': {
+              'format': 'dag-cbor',
+              'hashAlg': 'sha2-256'
+            }
+          }
+        },
+        'vm': {
+          '/': '',
+          'options': {
+            'format': 'dag-cbor',
+            'hashAlg': 'sha2-256'
+          }
+        },
+        'type': 'test'
+      },
+      'options': {
+        'format': 'dag-cbor',
+        'hashAlg': 'sha2-256'
+      }
+    }
     const expected = {
       '/': 'zdpuAvtdKSdBZgMcRa7VG6rrAPBu77LbainVF6oNEEE8cp8yW'
     }
@@ -212,6 +238,8 @@ node.on('start', () => {
 
     const result = await graph.get(testGet, 'parent')
     t.equals(result, null)
+    await graph.tree(expected, Infinity)
+    t.deepEquals(expected, expectedTree, 'tree should travers graph with null leafs')
 
     node.stop(() => {
       t.end()
