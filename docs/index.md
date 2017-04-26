@@ -1,6 +1,6 @@
 # constructor
 
-[index.js:28-31](https://github.com/ipld/js-ipld-graph-builder/blob/dbe100914dac531a441c5dc66f071ca1d5b53f06/index.js#L28-L31 "Source code on GitHub")
+[index.js:28-31](https://github.com/ipld/js-ipld-graph-builder/blob/d232c5d042c1b8fc0501697a4588ab85d9b8897a/index.js#L28-L31 "Source code on GitHub")
 
 **Parameters**
 
@@ -8,7 +8,7 @@
 
 # flush
 
-[index.js:174-182](https://github.com/ipld/js-ipld-graph-builder/blob/dbe100914dac531a441c5dc66f071ca1d5b53f06/index.js#L174-L182 "Source code on GitHub")
+[index.js:170-178](https://github.com/ipld/js-ipld-graph-builder/blob/d232c5d042c1b8fc0501697a4588ab85d9b8897a/index.js#L170-L178 "Source code on GitHub")
 
 flush an object to ipfs returning the resulting CID in a promise
 
@@ -21,7 +21,7 @@ Returns **Promise**
 
 # get
 
-[index.js:118-122](https://github.com/ipld/js-ipld-graph-builder/blob/dbe100914dac531a441c5dc66f071ca1d5b53f06/index.js#L118-L122 "Source code on GitHub")
+[index.js:80-84](https://github.com/ipld/js-ipld-graph-builder/blob/d232c5d042c1b8fc0501697a4588ab85d9b8897a/index.js#L80-L84 "Source code on GitHub")
 
 traverses an object's path and returns the resulting value in a Promise
 
@@ -34,7 +34,7 @@ Returns **Promise**
 
 # set
 
-[index.js:48-71](https://github.com/ipld/js-ipld-graph-builder/blob/dbe100914dac531a441c5dc66f071ca1d5b53f06/index.js#L48-L71 "Source code on GitHub")
+[index.js:48-72](https://github.com/ipld/js-ipld-graph-builder/blob/d232c5d042c1b8fc0501697a4588ab85d9b8897a/index.js#L48-L72 "Source code on GitHub")
 
 sets a value on a root object given its path
 
@@ -48,7 +48,7 @@ Returns **Promise**
 
 # tree
 
-[index.js:130-147](https://github.com/ipld/js-ipld-graph-builder/blob/dbe100914dac531a441c5dc66f071ca1d5b53f06/index.js#L130-L147 "Source code on GitHub")
+[index.js:126-143](https://github.com/ipld/js-ipld-graph-builder/blob/d232c5d042c1b8fc0501697a4588ab85d9b8897a/index.js#L126-L143 "Source code on GitHub")
 
 Resolves all the links in an object and does so recusivly for N `level`
 
