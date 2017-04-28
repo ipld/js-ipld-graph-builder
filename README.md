@@ -14,7 +14,7 @@ This provides an efficent way to build and manipulate IPLD DAGs as JSON. This is
 
 ```javascript
 const IPFS = require('ipfs')
-const Graph = require('./')
+const Graph = require('ipld-graph-builder')
 const ipfs = new IPFS()
 
 ipfs.on('start', () => {
