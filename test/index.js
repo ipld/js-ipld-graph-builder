@@ -46,7 +46,9 @@ node.on('start', () => {
     t.deepEquals(a, expect, 'should set a value correctly')
 
     const some = await graph.get(expect, 'some')
-    t.deepEquals(some, {'lol': 'test'}, 'should traverse objects with links')
+    t.deepEquals(some, {
+      'lol': 'test'
+    }, 'should traverse objects with links')
 
     const cid = await graph.flush(a)
     let result = await node.dag.get(new CID(cid['/']), 'some/lol')
@@ -148,14 +150,14 @@ node.on('start', () => {
       }
     }
     const b = {
-      lol: 'test'
+      lol: Buffer.from([0])
     }
     let expect = {
       some: {
         thing: {
           else: {
             '/': {
-              lol: 'test'
+              lol: Buffer.from([0])
             }
           }
         }
@@ -168,7 +170,7 @@ node.on('start', () => {
     expect = {
       some: {
         '/': {
-          'lol': 'test'
+          'lol': Buffer.from([0])
         }
       }
     }
@@ -182,7 +184,7 @@ node.on('start', () => {
     const value = {
       '/': {
         id: {
-          nonce: Buffer.from([0]),
+          nonce: [0],
           parent: {
             '/': null
           }
@@ -197,7 +199,7 @@ node.on('start', () => {
     const expectedTree = {
       '/': {
         'id': {
-          'nonce': Buffer.from([0]),
+          'nonce': [0],
           'parent': {
             '/': null,
             'options': {
@@ -221,15 +223,17 @@ node.on('start', () => {
       }
     }
     const expected = {
-      '/': 'zdpuAvtdKSdBZgMcRa7VG6rrAPBu77LbainVF6oNEEE8cp8yW'
+      '/': 'zdpuAx5z8MCXxywGK9FiBDaj7tVCC4zZs7ficVRD2w5hvo4vG'
     }
+
+    const expected2 = Object.assign({}, expected)
 
     await graph.flush(value)
     t.deepEquals(value, expected)
 
     const testGet = {
       '/': {
-        nonce: Buffer.from([0]),
+        nonce: [0],
         parent: {
           '/': null
         }
@@ -240,6 +244,9 @@ node.on('start', () => {
     t.equals(result, null)
     await graph.tree(expected, Infinity)
     t.deepEquals(expected, expectedTree, 'tree should travers graph with null leafs')
+
+    await graph.flush(expected)
+    t.deepEquals(expected, expected2, 'should round trip')
 
     const singlePath = {
       '/': {
