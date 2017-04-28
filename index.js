@@ -151,14 +151,11 @@ module.exports = class Graph {
       }
 
       await Promise.all(awaiting)
-      const link = node['/']
 
+      const link = node['/']
       if (link !== undefined && !isValidCID(link)) {
-        let options = opts
-        if (isObject(link)) {
-          options = link.options || opts
-          delete link.options
-        }
+        let options = node.options || opts
+        delete node.options
         return this._dag.put(link, options).then(cid => {
           node['/'] = cid.toBaseEncodedString()
         })
