@@ -25,7 +25,7 @@
     "async": "^2.3.0",
     "coveralls": "^2.13.0",
     "documentation": "^3.0.4",
-    "ipfs": "^0.23.1",
+    "ipfs": "^0.24.0",
     "istanbul": "^1.1.0-alpha.1",
     "standard": "^10.0.2",
     "tape": "^4.6.2"
