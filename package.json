@@ -18,6 +18,7 @@
   "author": "mjbecze <mjbecze@gmail.com>",
   "license": "MPL-2.0",
   "dependencies": {
+    "assert": "^1.4.1",
     "cids": "^0.5.0",
     "multihashes": "^0.4.5"
   },
