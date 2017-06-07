@@ -143,6 +143,28 @@ node.on('ready', () => {
     t.equals(val, 'test', 'should find the corret value')
     t.end()
   })
+
+  tape('testing setting on hash', async t => {
+    const graph = new Graph(node.dag)
+    t.plan(2)
+    const test = {
+      some: {
+        thing: {
+          else: {
+            '/': {
+              lol: Buffer.from([0])
+            }
+          }
+        }
+      }
+    }
+
+    await graph.flush(test, {
+      onHash: (hash, node) => {
+        t.true(true)
+      }
+    })
+  })
   tape('testing setting leaf values', async t => {
     const graph = new Graph(node.dag)
     const a = {

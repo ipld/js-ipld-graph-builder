@@ -146,25 +146,26 @@ module.exports = class Graph {
     }
   }
 
-  async _flush (node, opts = {format: 'dag-cbor', hashAlg: 'sha2-256'}) {
+  async _flush (node, opts) {
     const awaiting = []
     if (isObject(node)) {
       for (const name in node) {
         const edge = node[name]
-        awaiting.push(this._flush(edge))
+        awaiting.push(this._flush(edge, opts))
       }
 
       await Promise.all(awaiting)
 
       const link = node['/']
       if (link !== undefined && !isValidCID(link)) {
-        let options = node.options || opts
+        let options = Object.assign(opts, node.options)
         delete node.options
         return this._dag.put(link, options).then(cid => {
+          const str = cid.toBaseEncodedString()
           if (options.onHash) {
-            options.onHash(cid, link)
+            options.onHash(str, link)
           }
-          node['/'] = cid.toBaseEncodedString()
+          node['/'] = str
         })
       }
     }
@@ -174,9 +175,15 @@ module.exports = class Graph {
    * flush an object to ipfs returning the resulting CID in a promise
    * @param {Object} node
    * @param {Object} opts - encoding options for [`dag.put`](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput)
+   * @param {Function} opts.onHash - a callback that happens on each merklized node. It is given two arguments `hash` and `node` which is the node that was hashed
    * @return {Promise}
    */
-  async flush (node, opts) {
+  async flush (node, opts = {}) {
+    const defaults = {
+      format: 'dag-cbor',
+      hashAlg: 'sha2-256'
+    }
+    Object.assign(opts, defaults)
     if (!node['/']) {
       const oldRoot = Object.assign({}, node)
       clearObject(node)
