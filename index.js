@@ -161,6 +161,9 @@ module.exports = class Graph {
         let options = node.options || opts
         delete node.options
         return this._dag.put(link, options).then(cid => {
+          if (options.onHash) {
+            options.onHash(cid, link)
+          }
           node['/'] = cid.toBaseEncodedString()
         })
       }
