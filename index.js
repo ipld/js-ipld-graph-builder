@@ -28,18 +28,30 @@ module.exports = class Graph {
   constructor (ipfsDag) {
     assert(ipfsDag, 'ipld-graph must have an instance of ipfs.dag')
     this._dag = ipfsDag
+    this._loading = new Map()
   }
 
-  async _loadCID (node, link) {
-    const cid = new CID(link)
-    node.options = {}
-    node.options.format = cid.codec
-    node.options.hashAlg = multihashes.decode(cid.multihash).name
-    let value = (await this._dag.get(cid)).value
-    if (value && typeof value.toJSON === 'function') {
-      value = value.toJSON()
+  _loadCID (node, link) {
+    const loadingOp = this._loading.get(link)
+    if (loadingOp) {
+      return loadingOp
+    } else {
+      const promise = new Promise(async (resolve, reject) => {
+        const cid = new CID(link)
+        node.options = {}
+        node.options.format = cid.codec
+        node.options.hashAlg = multihashes.decode(cid.multihash).name
+        let value = (await this._dag.get(cid)).value
+        if (value && typeof value.toJSON === 'function') {
+          value = value.toJSON()
+        }
+        node['/'] = value
+        this._loading.delete(link)
+        resolve()
+      })
+      this._loading.set(link, promise)
+      return promise
     }
-    node['/'] = value
   }
 
   /**

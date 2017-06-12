@@ -310,4 +310,29 @@ node.on('ready', () => {
 
     t.end()
   })
+
+  tape('testing sequentail consistances', async t => {
+    const graph = new Graph(node.dag)
+    let test = {
+      some: {
+        thing: {
+          else: {
+            '/': {
+              lol: {
+                test: 1
+              }
+            }
+          }
+        }
+      }
+    }
+
+    await graph.flush(test)
+    const a = graph.get(test, 'some/thing/else/lol')
+    const b = graph.get(test, 'some/thing/else/lol')
+    const r = await Promise.all([a, b])
+    t.equals(r[0], r[1])
+
+    t.end()
+  })
 })
