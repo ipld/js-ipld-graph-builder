@@ -140,6 +140,7 @@ module.exports = class Graph {
    * @return {Promise}
    */
   async tree (node, levels = 1) {
+    const orignal = node
     if (isObject(node)) {
       const link = node['/']
       if (isValidCID(link)) {
@@ -156,6 +157,7 @@ module.exports = class Graph {
         await Promise.all(promises)
       }
     }
+    return orignal
   }
 
   async _flush (node, opts) {

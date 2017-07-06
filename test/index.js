@@ -272,7 +272,8 @@ node.on('ready', () => {
 
     let result = await graph.get(testGet, 'parent')
     t.equals(result, null)
-    await graph.tree(expected, Infinity)
+    const r = await graph.tree(expected, Infinity)
+    t.equals(r, expected, 'tree should also return the correct result')
     t.deepEquals(expected, expectedTree, 'tree should travers graph with null leafs')
 
     await graph.flush(expected)
