@@ -141,21 +141,19 @@ module.exports = class Graph {
    */
   async tree (node, levels = 1) {
     const orignal = node
-    if (isObject(node)) {
-      const link = node['/']
-      if (isValidCID(link)) {
-        await this._loadCID(node, link)
-        node = node['/']
+    const link = node['/']
+    if (isValidCID(link)) {
+      await this._loadCID(node, link)
+      node = node['/']
+    }
+    if (levels && isObject(node)) {
+      levels--
+      const promises = []
+      for (const name in node) {
+        const edge = node[name]
+        promises.push(this.tree(edge, levels))
       }
-      if (levels) {
-        levels--
-        const promises = []
-        for (const name in node) {
-          const edge = node[name]
-          promises.push(this.tree(edge, levels))
-        }
-        await Promise.all(promises)
-      }
+      await Promise.all(promises)
     }
     return orignal
   }
