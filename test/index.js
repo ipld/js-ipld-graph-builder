@@ -2,8 +2,6 @@ const tape = require('tape')
 const IPFS = require('ipfs')
 const CID = require('cids')
 const Graph = require('../')
-const dagPB = require('ipld-dag-pb')
-const DAGNode = dagPB.DAGNode
 
 const node = new IPFS({
   start: false
@@ -179,34 +177,6 @@ node.on('ready', () => {
     t.deepEquals(a, expect, 'should set a value correctly')
 
     t.end()
-  })
-
-  tape('ProtoBufs', async t => {
-    const graph = new Graph(node.dag)
-
-    const expected = {
-      '/': {
-        data: Buffer.from([0x73, 0x6f, 0x6d, 0x65, 0x20, 0x64, 0x61, 0x74, 0x61]),
-        links: [],
-        multihash: 'Qmd7xRhW5f29QuBFtqu3oSD27iVy35NRB91XFjmKFhtgMr',
-        size: 11
-      },
-      options: {
-        format: 'dag-pb',
-        hashAlg: 'sha2-256'
-      }
-    }
-
-    DAGNode.create(Buffer.from('some data'), async (err, node1) => {
-      console.log(err)
-      const r = await node.dag.put(node1, {format: 'dag-pb'})
-      const json = {
-        '/': r.multihash
-      }
-      await graph.tree(json, Infinity)
-      t.deepEquals(json, expected)
-      t.end()
-    })
   })
 
   tape('failure cases', async t => {

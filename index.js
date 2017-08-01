@@ -42,9 +42,6 @@ module.exports = class Graph {
         node.options.format = cid.codec
         node.options.hashAlg = multihashes.decode(cid.multihash).name
         let value = (await this._dag.get(cid)).value
-        if (value && typeof value.toJSON === 'function') {
-          value = value.toJSON()
-        }
         node['/'] = value
         this._loading.delete(link)
         resolve()
