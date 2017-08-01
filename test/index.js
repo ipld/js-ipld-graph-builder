@@ -315,4 +315,21 @@ node.on('ready', () => {
 
     t.end()
   })
+
+  tape('testing ints as keys', async t => {
+    const graph = new Graph(node.dag)
+    let test = ['test']
+
+    await graph.flush(test)
+    const b = await graph.get(test, 0)
+    t.equals(b, 'test')
+
+    await graph.set(test, 1, 'test2')
+    await graph.flush(test)
+    const c = await graph.get(test, 1)
+
+    t.equals(c, 'test2')
+
+    t.end()
+  })
 })

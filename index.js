@@ -62,10 +62,10 @@ module.exports = class Graph {
    * @return {Promise}
    */
   async set (node, path, value) {
+    path = formatPath(path)
     value = {
       '/': value
     }
-    path = path.split('/')
     const last = path.pop()
     let {
       value: foundVal,
@@ -94,7 +94,7 @@ module.exports = class Graph {
    * @return {Promise}
    */
   async get (node, path) {
-    path = path.split('/')
+    path = formatPath(path)
     const {value} = await this._get(node, path)
     return value
   }
@@ -203,4 +203,11 @@ module.exports = class Graph {
     await this._flush(node, opts)
     return node
   }
+}
+
+function formatPath (path) {
+  if (!path.split) {
+    path = path.toString()
+  }
+  return path.split('/')
 }
