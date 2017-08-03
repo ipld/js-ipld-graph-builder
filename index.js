@@ -163,24 +163,26 @@ module.exports = class Graph {
     return orignal
   }
 
-  async _flush (node, opts) {
-    const awaiting = []
+  _flush (node, opts) {
     if (isObject(node)) {
+      const awaiting = []
+
       for (const name in node) {
         const edge = node[name]
         awaiting.push(this._flush(edge, opts))
       }
 
-      await Promise.all(awaiting)
-
-      const link = node['/']
-      if (link !== undefined && !isValidCID(link)) {
-        let options = Object.assign(opts, node.options)
-        delete node.options
-        const cid = await this._dag.put(link, options)
-        const str = cid.toBaseEncodedString()
-        node['/'] = str
-      }
+      return Promise.all(awaiting).then(() => {
+        const link = node['/']
+        if (link !== undefined && !isValidCID(link)) {
+          let options = Object.assign(opts, node.options)
+          delete node.options
+          return this._dag.put(link, options).then(cid => {
+            const str = cid.toBaseEncodedString()
+            node['/'] = str
+          })
+        }
+      })
     }
   }
 
