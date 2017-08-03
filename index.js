@@ -90,6 +90,8 @@ module.exports = class Graph {
    * traverses an object's path and returns the resulting value in a Promise
    * @param {Object} node
    * @param {String} path
+   * @param {boolean} dropOptions - whether to add the encoding options of the
+   * nodes when loading from IPFS. Defaults to true
    * @return {Promise}
    */
   async get (node, path, dropOptions) {
@@ -136,6 +138,8 @@ module.exports = class Graph {
    * Resolves all the links in an object and does so recusivly for N `level`
    * @param {Object} node
    * @param {Integer} levels
+   * @param {boolean} dropOptions - whether to add the encoding options of the
+   * nodes when loading from IPFS. Defaults to true
    * @return {Promise}
    */
   async tree (node, levels = 1, dropOptions) {
@@ -173,10 +177,9 @@ module.exports = class Graph {
       if (link !== undefined && !isValidCID(link)) {
         let options = Object.assign(opts, node.options)
         delete node.options
-        return this._dag.put(link, options).then(cid => {
-          const str = cid.toBaseEncodedString()
-          node['/'] = str
-        })
+        const cid = await this._dag.put(link, options)
+        const str = cid.toBaseEncodedString()
+        node['/'] = str
       }
     }
   }
