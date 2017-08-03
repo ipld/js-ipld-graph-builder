@@ -31,16 +31,18 @@ module.exports = class Graph {
     this._loading = new Map()
   }
 
-  _loadCID (node, link) {
+  _loadCID (node, link, dropOptions = false) {
     const loadingOp = this._loading.get(link)
     if (loadingOp) {
       return loadingOp
     } else {
       const promise = new Promise(async (resolve, reject) => {
         const cid = new CID(link)
-        node.options = {}
-        node.options.format = cid.codec
-        node.options.hashAlg = multihashes.decode(cid.multihash).name
+        if (!dropOptions) {
+          node.options = {}
+          node.options.format = cid.codec
+          node.options.hashAlg = multihashes.decode(cid.multihash).name
+        }
         let value = (await this._dag.get(cid)).value
         node['/'] = value
         this._loading.delete(link)
@@ -90,20 +92,20 @@ module.exports = class Graph {
    * @param {String} path
    * @return {Promise}
    */
-  async get (node, path) {
+  async get (node, path, dropOptions) {
     path = formatPath(path)
-    const {value} = await this._get(node, path)
+    const {value} = await this._get(node, path, dropOptions)
     return value
   }
 
-  async _get (node, path) {
+  async _get (node, path, dropOptions) {
     let parent = node
     path = path.slice(0)
     while (1) {
       const link = node['/']
       // if there is a link, traverse throught it
       if (isValidCID(link)) {
-        await this._loadCID(node, link)
+        await this._loadCID(node, link, dropOptions)
       } else {
         if (link !== undefined) {
           // link is a POJO
@@ -136,12 +138,12 @@ module.exports = class Graph {
    * @param {Integer} levels
    * @return {Promise}
    */
-  async tree (node, levels = 1) {
+  async tree (node, levels = 1, dropOptions) {
     const orignal = node
     if (node) {
       const link = node['/']
       if (isValidCID(link)) {
-        await this._loadCID(node, link)
+        await this._loadCID(node, link, dropOptions)
         node = node['/']
       }
       if (levels && isObject(node)) {
@@ -149,7 +151,7 @@ module.exports = class Graph {
         const promises = []
         for (const name in node) {
           const edge = node[name]
-          promises.push(this.tree(edge, levels))
+          promises.push(this.tree(edge, levels, dropOptions))
         }
         await Promise.all(promises)
       }

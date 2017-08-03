@@ -126,6 +126,23 @@ node.on('ready', () => {
       }
     }
 
+    const expectedTeeNoOps = {
+      '/': {
+        'thing': {
+          'two': {
+            '/': {
+              'lol': 'test'
+            }
+          },
+          'else': {
+            '/': {
+              'lol': 'test'
+            }
+          }
+        }
+      }
+    }
+
     await graph.flush(a)
     t.deepEquals(a, expectedA, 'should flush correctly')
     t.deepEquals(b, expectedB, 'should flush correctly')
@@ -139,6 +156,11 @@ node.on('ready', () => {
 
     const val = await graph.get(copyA, 'thing/two/lol')
     t.equals(val, 'test', 'should find the corret value')
+
+    await graph.flush(a)
+    await graph.tree(a, Infinity, true)
+    t.deepEquals(a, expectedTeeNoOps, 'should tree correctly with no ops')
+
     t.end()
   })
 
