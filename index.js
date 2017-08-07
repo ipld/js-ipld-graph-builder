@@ -21,6 +21,21 @@ function clearObject (myObject) {
   }
 }
 
+function findLeafLinks (node) {
+  let links = []
+  for (const name in node) {
+    const edge = node[name]
+    if (isObject(edge)) {
+      if (edge['/'] !== undefined && !isValidCID(edge)) {
+        links.push(edge)
+      } else {
+        links = findLeafLinks(edge).concat(links)
+      }
+    }
+  }
+  return links
+}
+
 module.exports = class Graph {
   /**
    * @param {Object} ipfsDag an instance of [ipfs.dag](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dag-api)
@@ -164,26 +179,20 @@ module.exports = class Graph {
   }
 
   _flush (node, opts) {
-    if (isObject(node)) {
-      const awaiting = []
+    const awaiting = []
 
-      for (const name in node) {
-        const edge = node[name]
-        awaiting.push(this._flush(edge, opts))
-      }
+    const links = findLeafLinks(node)
+    links.forEach(link => awaiting.push(this._flush(link, opts)))
 
-      return Promise.all(awaiting).then(() => {
-        const link = node['/']
-        if (link !== undefined && !isValidCID(link)) {
-          let options = Object.assign(opts, node.options)
-          delete node.options
-          return this._dag.put(link, options).then(cid => {
-            const str = cid.toBaseEncodedString()
-            node['/'] = str
-          })
-        }
+    return Promise.all(awaiting).then(() => {
+      const link = node['/']
+      let options = Object.assign(opts, node.options)
+      delete node.options
+      return this._dag.put(link, options).then(cid => {
+        const str = cid.toBaseEncodedString()
+        node['/'] = str
       })
-    }
+    })
   }
 
   /**

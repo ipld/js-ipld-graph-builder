@@ -148,6 +148,7 @@ node.on('ready', () => {
     t.deepEquals(b, expectedB, 'should flush correctly')
 
     const copyA = Object.assign({}, a)
+
     await graph.tree(a)
     t.equals(a['/']['thing']['two']['/'].toString('hex'), '01711220db3e85891631bb4fa52af90bb7af455f4a6982fd28a5e7060ac485d3f6b4ca4c', 'should load one level')
 
