@@ -8,7 +8,7 @@
     "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
     "lint": "standard",
     "test": "node --harmony ./test/index.js",
-    "build:docs": "documentation ./index.js --github --sort-order source -f md  > ./docs/index.md"
+    "build:docs": "documentation build ./index.js --github --sort-order source -f md  > ./docs/index.md"
   },
   "keywords": [
     "merkle",
