@@ -126,11 +126,29 @@ node.on('ready', () => {
       }
     }
 
+    const expectedTeeNoOps = {
+      '/': {
+        'thing': {
+          'two': {
+            '/': {
+              'lol': 'test'
+            }
+          },
+          'else': {
+            '/': {
+              'lol': 'test'
+            }
+          }
+        }
+      }
+    }
+
     await graph.flush(a)
     t.deepEquals(a, expectedA, 'should flush correctly')
     t.deepEquals(b, expectedB, 'should flush correctly')
 
     const copyA = Object.assign({}, a)
+
     await graph.tree(a)
     t.equals(a['/']['thing']['two']['/'].toString('hex'), '01711220db3e85891631bb4fa52af90bb7af455f4a6982fd28a5e7060ac485d3f6b4ca4c', 'should load one level')
 
@@ -139,6 +157,11 @@ node.on('ready', () => {
 
     const val = await graph.get(copyA, 'thing/two/lol')
     t.equals(val, 'test', 'should find the corret value')
+
+    await graph.flush(a)
+    await graph.tree(a, Infinity, true)
+    t.deepEquals(a, expectedTeeNoOps, 'should tree correctly with no ops')
+
     t.end()
   })
 
