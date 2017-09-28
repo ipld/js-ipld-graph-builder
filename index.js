@@ -1,15 +1,5 @@
-const CID = require('cids')
-const multihashes = require('multihashes')
 const assert = require('assert')
-
-function isValidCID (link) {
-  try {
-    CID.isCID(new CID(link))
-  } catch (e) {
-    return false
-  }
-  return true
-}
+const DAGoverlay = require('./dag.js')
 
 function isObject (obj) {
   return typeof obj === 'object' && obj !== null
@@ -21,44 +11,26 @@ function clearObject (myObject) {
   }
 }
 
-function findLeafLinks (node) {
-  let links = []
-  for (const name in node) {
-    const edge = node[name]
-    if (isObject(edge)) {
-      if (edge['/'] !== undefined && !isValidCID(edge)) {
-        links.push(edge)
-      } else {
-        links = findLeafLinks(edge).concat(links)
-      }
-    }
-  }
-  return links
-}
-
 module.exports = class Graph {
   /**
    * @param {Object} ipfsDag an instance of [ipfs.dag](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dag-api)
    */
-  constructor (ipfsDag) {
-    assert(ipfsDag, 'ipld-graph must have an instance of ipfs.dag')
-    this._dag = ipfsDag
+  constructor (dag) {
+    assert(dag, 'ipld-graph must have an instance of ipfs.dag')
+    if (!(dag instanceof DAGoverlay)) {
+      dag = new DAGoverlay(dag)
+    }
+    this._dag = dag
     this._loading = new Map()
   }
 
-  _loadCID (node, link, dropOptions = false) {
+  _loadCID (node, link, dropOptions) {
     const loadingOp = this._loading.get(link)
     if (loadingOp) {
       return loadingOp
     } else {
       const promise = new Promise(async (resolve, reject) => {
-        const cid = new CID(link)
-        if (!dropOptions) {
-          node.options = {}
-          node.options.format = cid.codec
-          node.options.hashAlg = multihashes.decode(cid.multihash).name
-        }
-        let value = (await this._dag.get(cid)).value
+        let value = await this._dag.get(link, node, dropOptions)
         node['/'] = value
         this._loading.delete(link)
         resolve()
@@ -66,6 +38,26 @@ module.exports = class Graph {
       this._loading.set(link, promise)
       return promise
     }
+  }
+
+  /**
+   * given a node on the graph this returns all the leaf node that have not yet been saved
+   * @param {Object} node
+   * @return {Array}
+   */
+  findUnsavedLeafNodes (node) {
+    let links = []
+    for (const name in node) {
+      const edge = node[name]
+      if (isObject(edge)) {
+        if (edge['/'] !== undefined && !this._dag.isValidLink(edge['/'])) {
+          links.push(edge)
+        } else {
+          links = this.findUnsavedLeafNodes(edge).concat(links)
+        }
+      }
+    }
+    return links
   }
 
   /**
@@ -121,7 +113,7 @@ module.exports = class Graph {
     while (1) {
       const link = node['/']
       // if there is a link, traverse throught it
-      if (isValidCID(link)) {
+      if (this._dag.isValidLink(link)) {
         await this._loadCID(node, link, dropOptions)
       } else {
         if (link !== undefined) {
@@ -161,7 +153,7 @@ module.exports = class Graph {
     const orignal = node
     if (node) {
       const link = node['/']
-      if (isValidCID(link)) {
+      if (this._dag.isValidLink(link)) {
         await this._loadCID(node, link, dropOptions)
         node = node['/']
       }
@@ -181,16 +173,15 @@ module.exports = class Graph {
   _flush (node, opts) {
     const awaiting = []
 
-    const links = findLeafLinks(node)
+    const links = this.findUnsavedLeafNodes(node)
     links.forEach(link => awaiting.push(this._flush(link, opts)))
 
     return Promise.all(awaiting).then(() => {
       const link = node['/']
       let options = Object.assign(opts, node.options)
       delete node.options
-      return this._dag.put(link, options).then(cid => {
-        const str = cid.buffer
-        node['/'] = str
+      return this._dag.put(link, options).then(buffer => {
+        node['/'] = buffer
       })
     })
   }
