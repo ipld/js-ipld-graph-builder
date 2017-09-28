@@ -19,6 +19,7 @@
   "license": "MPL-2.0",
   "dependencies": {
     "assert": "^1.4.1",
+    "base-x": "^3.0.2",
     "cids": "^0.5.1",
     "multihashes": "^0.4.5"
   },

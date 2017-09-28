@@ -189,7 +189,7 @@ module.exports = class Graph {
       let options = Object.assign(opts, node.options)
       delete node.options
       return this._dag.put(link, options).then(cid => {
-        const str = cid.toBaseEncodedString()
+        const str = cid.buffer
         node['/'] = str
       })
     })

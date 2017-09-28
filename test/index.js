@@ -85,15 +85,15 @@ node.on('ready', () => {
 
     const b = a['/']
     const expectedA = {
-      '/': 'zdpuAncHcnA7MJnwFrxY8JxFQ5i8secxvWcWuLiktwatTgpxf'
+      '/': Buffer.from('01711220207ebd54e4992fbd944fca95bb84825d0153e87caa61fb742ba9e98fbbeb2710', 'hex')
     }
     const expectedB = {
       thing: {
         two: {
-          '/': 'zdpuB1BH4aTUFEXbCxESk41PQieE1fLcpPcmFnqd89ZPtJWaf'
+          '/': Buffer.from('01711220db3e85891631bb4fa52af90bb7af455f4a6982fd28a5e7060ac485d3f6b4ca4c', 'hex')
         },
         else: {
-          '/': 'zdpuB1BH4aTUFEXbCxESk41PQieE1fLcpPcmFnqd89ZPtJWaf'
+          '/': Buffer.from('01711220db3e85891631bb4fa52af90bb7af455f4a6982fd28a5e7060ac485d3f6b4ca4c', 'hex')
         }
       }
     }
@@ -246,7 +246,7 @@ node.on('ready', () => {
       }
     }
     const expected = {
-      '/': 'zdpuAx5z8MCXxywGK9FiBDaj7tVCC4zZs7ficVRD2w5hvo4vG'
+      '/': Buffer.from('01711220ad50688a54e58cff28d2f727754a61d3349c66b1dbe2eafb344ec78edcae54fd', 'hex')
     }
 
     const expected2 = Object.assign({}, expected)
