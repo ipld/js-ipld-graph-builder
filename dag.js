@@ -1,6 +1,5 @@
 const CID = require('cids')
 const multihashes = require('multihashes')
-const Buffer = require('safe-buffer').Buffer
 
 module.exports = class DAGoverlay {
   constructor (dag) {
@@ -22,13 +21,11 @@ module.exports = class DAGoverlay {
   }
 
   isValidLink (link) {
-    return Buffer.isBuffer(link)
-    // try {
-    //   const cid = new CID(link)
-    //   CID.isCID(cid)
-    //   return cid
-    // } catch (e) {
-    //   return false
-    // }
+    try {
+      const cid = new CID(link)
+      return CID.isCID(cid)
+    } catch (e) {
+      return false
+    }
   }
 }

@@ -20,8 +20,7 @@
   "dependencies": {
     "assert": "^1.4.1",
     "cids": "^0.5.1",
-    "multihashes": "^0.4.5",
-    "safe-buffer": "^5.1.1"
+    "multihashes": "^0.4.5"
   },
   "devDependencies": {
     "async": "^2.3.0",
