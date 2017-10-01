@@ -282,7 +282,15 @@ node.on('ready', () => {
     result = await graph.get(singlePath, 'parent')
     t.equals(result, null, 'should get null value')
 
-    t.end()
+    try {
+      const graph2 = new Graph(node.dag)
+      const root = {
+        '/': Buffer.from('01711220ad58688a54e58cff28d2f727754a61d3349c66b1dbe2eafb344ec78edcae54fd', 'hex')
+      }
+      await graph2.get(root, 'test/test/test')
+    } catch (e) {
+      t.end()
+    }
   })
 
   tape('testing sequentail consistances', async t => {

@@ -30,10 +30,14 @@ module.exports = class Graph {
       return loadingOp
     } else {
       const promise = new Promise(async (resolve, reject) => {
-        let value = await this._dag.get(link, node, dropOptions)
-        node['/'] = value
-        this._loading.delete(link)
-        resolve()
+        try {
+          let value = await this._dag.get(link, node, dropOptions)
+          node['/'] = value
+          this._loading.delete(link)
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
       })
       this._loading.set(link, promise)
       return promise
