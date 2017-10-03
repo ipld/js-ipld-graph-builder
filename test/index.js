@@ -2,7 +2,7 @@ const tape = require('tape')
 const IPFS = require('ipfs')
 const CID = require('cids')
 const Graph = require('../')
-const Dag = require('../dag.js')
+const Datastore = require('../datastore.js')
 
 const node = new IPFS({
   start: false
@@ -10,7 +10,7 @@ const node = new IPFS({
 
 node.on('ready', () => {
   tape('testing graph builder', async t => {
-    const graph = new Graph(new Dag(node.dag))
+    const graph = new Graph(new Datastore(node.dag))
     const a = {
       some: {
         thing: 'nested'

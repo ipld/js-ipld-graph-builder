@@ -1,5 +1,5 @@
 const assert = require('assert')
-const DAGoverlay = require('./dag.js')
+const DataStore = require('./datastore.js')
 
 function isObject (obj) {
   return typeof obj === 'object' && obj !== null
@@ -17,8 +17,8 @@ module.exports = class Graph {
    */
   constructor (dag) {
     assert(dag, 'ipld-graph must have an instance of ipfs.dag')
-    if (!(dag instanceof DAGoverlay)) {
-      dag = new DAGoverlay(dag)
+    if (!(dag instanceof DataStore)) {
+      dag = new DataStore(dag)
     }
     this._dag = dag
     this._loading = new Map()
