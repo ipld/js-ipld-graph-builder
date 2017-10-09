@@ -1,5 +1,5 @@
 const assert = require('assert')
-const DataStore = require('./datastore.js')
+const Store = require('./datastore.js')
 
 function isObject (obj) {
   return typeof obj === 'object' && obj !== null
@@ -17,8 +17,8 @@ module.exports = class Graph {
    */
   constructor (dag) {
     assert(dag, 'ipld-graph must have an instance of ipfs.dag')
-    if (!(dag instanceof DataStore)) {
-      dag = new DataStore(dag)
+    if (!(dag instanceof Store)) {
+      dag = new Store(dag)
     }
     this._dag = dag
     this._loading = new Map()
@@ -54,7 +54,7 @@ module.exports = class Graph {
     for (const name in node) {
       const edge = node[name]
       if (isObject(edge)) {
-        if (edge['/'] !== undefined && !this._dag.isValidLink(edge['/'])) {
+        if (edge['/'] !== undefined && !Store.isValidLink(edge['/'])) {
           links.push(edge)
         } else {
           links = this.findUnsavedLeafNodes(edge).concat(links)
@@ -117,7 +117,7 @@ module.exports = class Graph {
     while (1) {
       const link = node['/']
       // if there is a link, traverse throught it
-      if (this._dag.isValidLink(link)) {
+      if (Store.isValidLink(link)) {
         await this._loadCID(node, link, dropOptions)
       } else {
         if (link !== undefined) {
@@ -157,7 +157,7 @@ module.exports = class Graph {
     const orignal = node
     if (node) {
       const link = node['/']
-      if (this._dag.isValidLink(link)) {
+      if (Store.isValidLink(link)) {
         await this._loadCID(node, link, dropOptions)
         node = node['/']
       }

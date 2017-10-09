@@ -1,7 +1,7 @@
 const CID = require('cids')
 const multihashes = require('multihashes')
 
-module.exports = class DAGoverlay {
+module.exports = class Store {
   constructor (dag) {
     this._dag = dag
   }
@@ -20,7 +20,7 @@ module.exports = class DAGoverlay {
     return this._dag.get(cid).then(node => node.value)
   }
 
-  isValidLink (link) {
+  static isValidLink (link) {
     try {
       const cid = new CID(link)
       return CID.isCID(cid)
