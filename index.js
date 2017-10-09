@@ -54,7 +54,7 @@ module.exports = class Graph {
     for (const name in node) {
       const edge = node[name]
       if (isObject(edge)) {
-        if (edge['/'] !== undefined && !Store.isValidLink(edge['/'])) {
+        if (edge['/'] !== undefined && !this._dag.constructor.isValidLink(edge['/'])) {
           links.push(edge)
         } else {
           links = this.findUnsavedLeafNodes(edge).concat(links)
@@ -117,7 +117,7 @@ module.exports = class Graph {
     while (1) {
       const link = node['/']
       // if there is a link, traverse throught it
-      if (Store.isValidLink(link)) {
+      if (this._dag.constructor.isValidLink(link)) {
         await this._loadCID(node, link, dropOptions)
       } else {
         if (link !== undefined) {
@@ -157,7 +157,7 @@ module.exports = class Graph {
     const orignal = node
     if (node) {
       const link = node['/']
-      if (Store.isValidLink(link)) {
+      if (this._dag.constructor.isValidLink(link)) {
         await this._loadCID(node, link, dropOptions)
         node = node['/']
       }
