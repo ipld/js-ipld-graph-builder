@@ -1,4 +1,5 @@
 const assert = require('assert')
+const LockMap = require('lockmap')
 const Store = require('./datastore.js')
 
 function isObject (obj) {
@@ -21,26 +22,19 @@ module.exports = class Graph {
       dag = new Store(dag)
     }
     this._dag = dag
-    this._loading = new Map()
+    this._loading = new LockMap()
   }
 
-  _loadCID (node, link, dropOptions) {
+  async _loadCID (node, link, dropOptions) {
     const loadingOp = this._loading.get(link)
     if (loadingOp) {
       return loadingOp
     } else {
-      const promise = new Promise(async (resolve, reject) => {
-        try {
-          let value = await this._dag.get(link, node, dropOptions)
-          node['/'] = value
-          this._loading.delete(link)
-          resolve()
-        } catch (e) {
-          reject(e)
-        }
-      })
-      this._loading.set(link, promise)
-      return promise
+      const resolve = this._loading.lock(link)
+      let value = await this._dag.get(link, node, dropOptions)
+      node['/'] = value
+      this._loading.delete(link)
+      resolve()
     }
   }
 
