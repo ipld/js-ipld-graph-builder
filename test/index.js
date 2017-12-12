@@ -203,7 +203,6 @@ node.on('ready', () => {
     t.end()
   })
 
-
   tape('testing setting leaf values as plain objects', async t => {
     const graph = new Graph(node.dag)
     const a = {
@@ -265,7 +264,7 @@ node.on('ready', () => {
 
     await graph.set(a, 'some/thing/else', b)
     t.deepEquals(a, expect, 'should set a value correctly')
-    const c = 'stc';
+    const c = 'stc'
     await graph.set(a, 'some/thing/else/lol/rofl', c, true)
     expect = {
       some: {
@@ -277,7 +276,7 @@ node.on('ready', () => {
                 rofl: 'stc'
               }
             }
-          },
+          }
         }
       }
     }
