@@ -26,7 +26,7 @@
   "devDependencies": {
     "coveralls": "^3.0.0",
     "documentation": "^5.3.3",
-    "ipfs": "^0.26.0",
+    "ipfs": "^0.27.0",
     "ipld-dag-pb": "^0.11.3",
     "nyc": "^11.3.0",
     "standard": "^10.0.2",
