@@ -203,6 +203,88 @@ node.on('ready', () => {
     t.end()
   })
 
+  tape('testing setting leaf values as plain objects', async t => {
+    const graph = new Graph(node.dag)
+    const a = {
+      some: {
+        thing: 'nested'
+      }
+    }
+    const b = {
+      lol: Buffer.from([0])
+    }
+    let expect = {
+      some: {
+        thing: {
+          else: {
+            lol: Buffer.from([0])
+          }
+        }
+      }
+    }
+
+    await graph.set(a, 'some/thing/else', b, true)
+    t.deepEquals(a, expect, 'should set a value correctly')
+    await graph.set(a, 'some', b, true)
+    expect = {
+      some: {
+        'lol': Buffer.from([0])
+      }
+    }
+    t.deepEquals(a, expect, 'should set a value correctly')
+
+    t.end()
+  })
+
+  tape('testing setting leaf values in a subtree as plain objects', async t => {
+    const graph = new Graph(node.dag)
+    const a = {
+      some: {
+        thing: 'nested'
+      }
+    }
+    const b = {
+      lol: {
+        trololo: 'lololo'
+      }
+    }
+    let expect = {
+      some: {
+        thing: {
+          else: {
+            '/': {
+              lol: {
+                trololo: 'lololo'
+              }
+            }
+          }
+        }
+      }
+    }
+
+    await graph.set(a, 'some/thing/else', b)
+    t.deepEquals(a, expect, 'should set a value correctly')
+    const c = 'stc'
+    await graph.set(a, 'some/thing/else/lol/rofl', c, true)
+    expect = {
+      some: {
+        thing: {
+          else: {
+            '/': {
+              lol: {
+                trololo: 'lololo',
+                rofl: 'stc'
+              }
+            }
+          }
+        }
+      }
+    }
+    t.deepEquals(a, expect, 'should set a value correctly')
+
+    t.end()
+  })
+
   tape('failure cases', async t => {
     const graph = new Graph(node.dag)
     const value = {

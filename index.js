@@ -63,12 +63,15 @@ module.exports = class Graph {
    * @param {Object} node
    * @param {String} path
    * @param {*} value
+   * @param {boolean} noLink - if true, value is added as a plain object instead of a link
    * @return {Promise}
    */
-  async set (node, path, value) {
+  async set (node, path, value, noLink) {
     path = formatPath(path)
-    value = {
-      '/': value
+    if (!noLink) {
+      value = {
+        '/': value
+      }
     }
     const last = path.pop()
     let {

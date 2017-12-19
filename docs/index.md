@@ -3,6 +3,7 @@
 ### Table of Contents
 
 -   [constructor](#constructor)
+-   [findUnsavedLeafNodes](#findunsavedleafnodes)
 -   [set](#set)
 -   [get](#get)
 -   [tree](#tree)
@@ -10,15 +11,28 @@
 
 ## constructor
 
-[index.js:43-47](https://github.com/ipld/js-ipld-graph-builder/blob/9d7417df5c458997584b73f5ae8b653be46f1828/index.js#L43-L47 "Source code on GitHub")
+[index.js:19-26](https://github.com/wulfraem/js-ipld-graph-builder/blob/6e85b3c8962021745a51de272ad6def2477deaac/index.js#L19-L26 "Source code on GitHub")
 
 **Parameters**
 
+-   `dag`  
 -   `ipfsDag` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** an instance of [ipfs.dag](https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dag-api)
+
+## findUnsavedLeafNodes
+
+[index.js:46-59](https://github.com/wulfraem/js-ipld-graph-builder/blob/6e85b3c8962021745a51de272ad6def2477deaac/index.js#L46-L59 "Source code on GitHub")
+
+given a node on the graph this returns all the leaf node that have not yet been saved
+
+**Parameters**
+
+-   `node` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
 
 ## set
 
-[index.js:78-102](https://github.com/ipld/js-ipld-graph-builder/blob/9d7417df5c458997584b73f5ae8b653be46f1828/index.js#L78-L102 "Source code on GitHub")
+[index.js:69-95](https://github.com/wulfraem/js-ipld-graph-builder/blob/6e85b3c8962021745a51de272ad6def2477deaac/index.js#L69-L95 "Source code on GitHub")
 
 sets a value on a root object given its path
 
@@ -27,12 +41,13 @@ sets a value on a root object given its path
 -   `node` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `value` **any** 
+-   `noLink` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** if true, value is added as a plain object instead of a link
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
 ## get
 
-[index.js:112-116](https://github.com/ipld/js-ipld-graph-builder/blob/9d7417df5c458997584b73f5ae8b653be46f1828/index.js#L112-L116 "Source code on GitHub")
+[index.js:105-109](https://github.com/wulfraem/js-ipld-graph-builder/blob/6e85b3c8962021745a51de272ad6def2477deaac/index.js#L105-L109 "Source code on GitHub")
 
 traverses an object's path and returns the resulting value in a Promise
 
@@ -47,7 +62,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ## tree
 
-[index.js:160-179](https://github.com/ipld/js-ipld-graph-builder/blob/9d7417df5c458997584b73f5ae8b653be46f1828/index.js#L160-L179 "Source code on GitHub")
+[index.js:153-172](https://github.com/wulfraem/js-ipld-graph-builder/blob/6e85b3c8962021745a51de272ad6def2477deaac/index.js#L153-L172 "Source code on GitHub")
 
 Resolves all the links in an object and does so recusivly for N `level`
 
@@ -62,7 +77,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ## flush
 
-[index.js:205-218](https://github.com/ipld/js-ipld-graph-builder/blob/9d7417df5c458997584b73f5ae8b653be46f1828/index.js#L205-L218 "Source code on GitHub")
+[index.js:197-210](https://github.com/wulfraem/js-ipld-graph-builder/blob/6e85b3c8962021745a51de272ad6def2477deaac/index.js#L197-L210 "Source code on GitHub")
 
 flush an object to ipfs returning the resulting CID in a promise
 
