@@ -179,7 +179,7 @@ module.exports = class Graph {
 
     return Promise.all(awaiting).then(() => {
       const link = node['/']
-      let options = Object.assign(opts, node.options)
+      const options = Object.assign({}, opts, node.options)
       delete node.options
       return this._dag.put(link, options).then(buffer => {
         node['/'] = buffer
@@ -199,13 +199,13 @@ module.exports = class Graph {
       format: 'dag-cbor',
       hashAlg: 'sha2-256'
     }
-    Object.assign(opts, defaults)
+    const mergedOptions = Object.assign({}, defaults, opts)
     if (!node['/']) {
       const oldRoot = Object.assign({}, node)
       clearObject(node)
       node['/'] = oldRoot
     }
-    await this._flush(node, opts)
+    await this._flush(node, mergedOptions)
     return node
   }
 }
