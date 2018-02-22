@@ -2,6 +2,11 @@ const assert = require('assert')
 const LockMap = require('lockmap')
 const Store = require('./datastore.js')
 
+const DEFAULTS = {
+  format: 'dag-cbor',
+  hashAlg: 'sha2-256'
+}
+
 function isObject (obj) {
   return typeof obj === 'object' && obj !== null
 }
@@ -195,11 +200,7 @@ module.exports = class Graph {
    * @return {Promise}
    */
   async flush (node, opts = {}) {
-    const defaults = {
-      format: 'dag-cbor',
-      hashAlg: 'sha2-256'
-    }
-    const mergedOptions = Object.assign({}, defaults, opts)
+    const mergedOptions = Object.assign({}, DEFAULTS, opts)
     if (!node['/']) {
       const oldRoot = Object.assign({}, node)
       clearObject(node)
