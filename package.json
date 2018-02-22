@@ -28,7 +28,7 @@
     "documentation": "^5.3.5",
     "ipfs": "^0.27.0",
     "nyc": "^11.4.1",
-    "standard": "^10.0.2",
+    "standard": "^11.0.0",
     "tape": "^4.8.0"
   },
   "repository": {
