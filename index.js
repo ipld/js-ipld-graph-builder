@@ -200,13 +200,15 @@ module.exports = class Graph {
    * @return {Promise}
    */
   async flush (node, opts = {}) {
-    const mergedOptions = Object.assign({}, DEFAULTS, opts)
-    if (!node['/']) {
-      const oldRoot = Object.assign({}, node)
-      clearObject(node)
-      node['/'] = oldRoot
+    if (!this._dag.constructor.isValidLink(node['/'])) {
+      const mergedOptions = Object.assign({}, DEFAULTS, opts)
+      if (!node['/']) {
+        const oldRoot = Object.assign({}, node)
+        clearObject(node)
+        node['/'] = oldRoot
+      }
+      await this._flush(node, mergedOptions)
     }
-    await this._flush(node, mergedOptions)
     return node
   }
 }

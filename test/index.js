@@ -416,4 +416,18 @@ node.on('ready', () => {
 
     t.end()
   })
+
+  tape('flushing the same root mutliple time should have the same result', async t => {
+    const graph = new Graph(node.dag)
+    let test = {'/': ['test']}
+
+    await graph.flush(test)
+    const r1 = test['/'].toString('hex')
+
+    await graph.flush(test)
+    const r2 = test['/'].toString('hex')
+    t.equals(r1, r2)
+
+    t.end()
+  })
 })
