@@ -19,16 +19,16 @@
   "license": "MPL-2.0",
   "dependencies": {
     "assert": "^1.4.1",
-    "cids": "^0.5.2",
+    "cids": "^0.5.3",
     "lockmap": "^0.1.0",
     "multihashes": "^0.4.12"
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
-    "documentation": "^5.3.5",
-    "ipfs": "^0.27.0",
-    "nyc": "^11.4.1",
-    "standard": "^11.0.0",
+    "documentation": "^6.1.0",
+    "ipfs": "^0.28.2",
+    "nyc": "^11.6.0",
+    "standard": "^11.0.1",
     "tape": "^4.8.0"
   },
   "repository": {
