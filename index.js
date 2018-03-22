@@ -177,10 +177,8 @@ module.exports = class Graph {
   }
 
   _flush (node, opts) {
-    const awaiting = []
-
     const links = this.findUnsavedLeafNodes(node)
-    links.forEach(link => awaiting.push(this._flush(link, opts)))
+    const awaiting = links.map(link => this._flush(link, opts))
 
     return Promise.all(awaiting).then(() => {
       const link = node['/']
