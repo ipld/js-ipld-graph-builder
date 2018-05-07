@@ -24,10 +24,10 @@
     "multihashes": "^0.4.12"
   },
   "devDependencies": {
-    "coveralls": "^3.0.0",
-    "documentation": "^6.1.0",
+    "coveralls": "^3.0.1",
+    "documentation": "^6.3.2",
     "ipfs": "^0.28.2",
-    "nyc": "^11.6.0",
+    "nyc": "^11.7.1",
     "standard": "^11.0.1",
     "tape": "^4.8.0"
   },
