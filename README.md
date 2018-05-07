@@ -7,6 +7,10 @@
 
 This provides an efficent way to build and manipulate IPLD DAGs as JSON. This is accomplished by only producing merkle roots when `flush`ing the DAG. If any object has a "/" property, its value will be replaced with the merkle hash of that value when flushed. This allows you to build object anyway you like. 
 
+# LEAD MAINTAINER
+
+[wanderer](https://github.com/wanderer)
+
 # INSTALL
 `npm install ipld-graph-builder`
 
