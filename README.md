@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/travis/ipld/js-ipld-graph-builder.svg?branch=master&style=flat-square)](https://travis-ci.org/ipld/js-ipld-graph-builder)
 [![Coverage Status](https://img.shields.io/coveralls/ipld/js-ipld-graph-builder.svg?style=flat-square)](https://coveralls.io/r/ipld/js-ipld-graph-builder)
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)  
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard) [![Greenkeeper badge](https://badges.greenkeeper.io/ipld/js-ipld-graph-builder.svg)](https://greenkeeper.io/)  
 
 This provides an efficent way to build and manipulate IPLD DAGs as JSON. This is accomplished by only producing merkle roots when `flush`ing the DAG. If any object has a "/" property, its value will be replaced with the merkle hash of that value when flushed. This allows you to build object anyway you like. 
 
