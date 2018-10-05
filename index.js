@@ -29,11 +29,11 @@ module.exports = class Graph {
     this._dag = dag
     this._loading = new LockMap()
   }
-   
-	// this loads a cid from the ipfs.dag
+
+  // this loads a cid from the ipfs.dag
   async _loadCID (node, link, dropOptions) {
-		// _loading is a map of cid's that we have already requested. We don't want
-		// to rerequiest something that we already started loading
+    // _loading is a map of cid's that we have already requested. We don't want
+    // to rerequiest something that we already started loading
     const loadingOp = this._loading.get(link)
     if (loadingOp) {
       return loadingOp
