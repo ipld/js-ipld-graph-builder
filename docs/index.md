@@ -3,128 +3,146 @@
 ### Table of Contents
 
 -   [constructor][1]
--   [findUnsavedLeafNodes][2]
--   [set][3]
--   [get][4]
--   [tree][5]
--   [flush][6]
+    -   [Parameters][2]
+-   [findUnsavedLeafNodes][3]
+    -   [Parameters][4]
+-   [set][5]
+    -   [Parameters][6]
+-   [get][7]
+    -   [Parameters][8]
+-   [tree][9]
+    -   [Parameters][10]
+-   [flush][11]
+    -   [Parameters][12]
 
 ## constructor
 
-[index.js:24-31][7]
+[index.js:24-31][13]
 
-**Parameters**
+### Parameters
 
 -   `dag`  
--   `ipfsDag` **[Object][8]** an instance of [ipfs.dag][9]
+-   `ipfsDag` **[Object][14]** an instance of [ipfs.dag][15]
 
 ## findUnsavedLeafNodes
 
-[index.js:51-64][10]
+[index.js:54-67][16]
 
 given a node on the graph this returns all the leaf node that have not yet been saved
 
-**Parameters**
+### Parameters
 
--   `node` **[Object][8]** 
+-   `node` **[Object][14]** 
 
-Returns **[Array][11]** 
+Returns **[Array][17]** 
 
 ## set
 
-[index.js:74-100][12]
+[index.js:77-103][18]
 
 sets a value on a root object given its path
 
-**Parameters**
+### Parameters
 
--   `node` **[Object][8]** 
--   `path` **[String][13]** 
+-   `node` **[Object][14]** 
+-   `path` **[String][19]** 
 -   `value` **any** 
--   `noLink` **[boolean][14]** if true, value is added as a plain object instead of a link
+-   `noLink` **[boolean][20]** if true, value is added as a plain object instead of a link
 
-Returns **[Promise][15]** 
+Returns **[Promise][21]** 
 
 ## get
 
-[index.js:110-114][16]
+[index.js:113-117][22]
 
 traverses an object's path and returns the resulting value in a Promise
 
-**Parameters**
+### Parameters
 
--   `node` **[Object][8]** 
--   `path` **[String][13]** 
--   `dropOptions` **[boolean][14]** whether to add the encoding options of the
+-   `node` **[Object][14]** 
+-   `path` **[String][19]** 
+-   `dropOptions` **[boolean][20]** whether to add the encoding options of the
     nodes when loading from IPFS. Defaults to true
 
-Returns **[Promise][15]** 
+Returns **[Promise][21]** 
 
 ## tree
 
-[index.js:158-177][17]
+[index.js:161-180][23]
 
 Resolves all the links in an object and does so recusivly for N `level`
 
-**Parameters**
+### Parameters
 
--   `node` **[Object][8]** 
+-   `node` **[Object][14]** 
 -   `levels` **Integer**  (optional, default `1`)
--   `dropOptions` **[boolean][14]** whether to add the encoding options of the
+-   `dropOptions` **[boolean][20]** whether to add the encoding options of the
     nodes when loading from IPFS. Defaults to true
 
-Returns **[Promise][15]** 
+Returns **[Promise][21]** 
 
 ## flush
 
-[index.js:202-213][18]
+[index.js:203-214][24]
 
 flush an object to ipfs returning the resulting CID in a promise
 
-**Parameters**
+### Parameters
 
--   `node` **[Object][8]** 
--   `opts` **[Object][8]** encoding options for [`dag.put`][19] (optional, default `{}`)
-    -   `opts.onHash` **[Function][20]** a callback that happens on each merklized node. It is given two arguments `hash` and `node` which is the node that was hashed
+-   `node` **[Object][14]** 
+-   `opts` **[Object][14]** encoding options for [`dag.put`][25] (optional, default `{}`)
+    -   `opts.onHash` **[Function][26]** a callback that happens on each merklized node. It is given two arguments `hash` and `node` which is the node that was hashed
 
-Returns **[Promise][15]** 
+Returns **[Promise][21]** 
 
 [1]: #constructor
 
-[2]: #findunsavedleafnodes
+[2]: #parameters
 
-[3]: #set
+[3]: #findunsavedleafnodes
 
-[4]: #get
+[4]: #parameters-1
 
-[5]: #tree
+[5]: #set
 
-[6]: #flush
+[6]: #parameters-2
 
-[7]: https://github.com/ipld/js-ipld-graph-builder/blob/103f03e55032dc088ec948a50d433e5bb2f3e982/index.js#L24-L31 "Source code on GitHub"
+[7]: #get
 
-[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[8]: #parameters-3
 
-[9]: https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dag-api
+[9]: #tree
 
-[10]: https://github.com/ipld/js-ipld-graph-builder/blob/103f03e55032dc088ec948a50d433e5bb2f3e982/index.js#L51-L64 "Source code on GitHub"
+[10]: #parameters-4
 
-[11]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[11]: #flush
 
-[12]: https://github.com/ipld/js-ipld-graph-builder/blob/103f03e55032dc088ec948a50d433e5bb2f3e982/index.js#L74-L100 "Source code on GitHub"
+[12]: #parameters-5
 
-[13]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[13]: https://github.com/ipld/js-ipld-graph-builder/blob/d804c9c2d3c224248c4cc168d2710776df5c42f1/index.js#L24-L31 "Source code on GitHub"
 
-[14]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[14]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[15]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[15]: https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dag-api
 
-[16]: https://github.com/ipld/js-ipld-graph-builder/blob/103f03e55032dc088ec948a50d433e5bb2f3e982/index.js#L110-L114 "Source code on GitHub"
+[16]: https://github.com/ipld/js-ipld-graph-builder/blob/d804c9c2d3c224248c4cc168d2710776df5c42f1/index.js#L54-L67 "Source code on GitHub"
 
-[17]: https://github.com/ipld/js-ipld-graph-builder/blob/103f03e55032dc088ec948a50d433e5bb2f3e982/index.js#L158-L177 "Source code on GitHub"
+[17]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[18]: https://github.com/ipld/js-ipld-graph-builder/blob/103f03e55032dc088ec948a50d433e5bb2f3e982/index.js#L202-L213 "Source code on GitHub"
+[18]: https://github.com/ipld/js-ipld-graph-builder/blob/d804c9c2d3c224248c4cc168d2710776df5c42f1/index.js#L77-L103 "Source code on GitHub"
 
-[19]: https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput
+[19]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[20]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[20]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[21]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[22]: https://github.com/ipld/js-ipld-graph-builder/blob/d804c9c2d3c224248c4cc168d2710776df5c42f1/index.js#L113-L117 "Source code on GitHub"
+
+[23]: https://github.com/ipld/js-ipld-graph-builder/blob/d804c9c2d3c224248c4cc168d2710776df5c42f1/index.js#L161-L180 "Source code on GitHub"
+
+[24]: https://github.com/ipld/js-ipld-graph-builder/blob/d804c9c2d3c224248c4cc168d2710776df5c42f1/index.js#L203-L214 "Source code on GitHub"
+
+[25]: https://github.com/ipfs/interface-ipfs-core/tree/master/API/dag#dagput
+
+[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function

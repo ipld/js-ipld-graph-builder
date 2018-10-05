@@ -1,6 +1,7 @@
 const CID = require('cids')
 const multihashes = require('multihashes')
 
+// this is a very simple abtraction for `ipfs.dag`.
 module.exports = class Store {
   constructor (dag) {
     this._dag = dag
