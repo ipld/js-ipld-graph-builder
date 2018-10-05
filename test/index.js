@@ -419,7 +419,7 @@ node.on('ready', () => {
 
   tape('flushing the same root mutliple time should have the same result', async t => {
     const graph = new Graph(node.dag)
-    let test = {'/': ['test']}
+    let test = { '/': ['test'] }
 
     await graph.flush(test)
     const r1 = test['/'].toString('hex')

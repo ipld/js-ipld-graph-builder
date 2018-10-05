@@ -109,7 +109,7 @@ module.exports = class Graph {
    */
   async get (node, path, dropOptions) {
     path = formatPath(path)
-    const {value} = await this._get(node, path, dropOptions)
+    const { value } = await this._get(node, path, dropOptions)
     return value
   }
 
