@@ -1,6 +1,5 @@
 # SYNOPSIS 
 [![NPM Package](https://img.shields.io/npm/v/ipld-graph-builder.svg?style=flat-square)](https://www.npmjs.org/package/ipld-graph-builder)
-[![Build Status](https://img.shields.io/travis/ipld/js-ipld-graph-builder.svg?branch=master&style=flat-square)](https://travis-ci.org/ipld/js-ipld-graph-builder)
 [![Coverage Status](https://img.shields.io/coveralls/ipld/js-ipld-graph-builder.svg?style=flat-square)](https://coveralls.io/r/ipld/js-ipld-graph-builder)
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard) [![Greenkeeper badge](https://badges.greenkeeper.io/ipld/js-ipld-graph-builder.svg)](https://greenkeeper.io/)  
