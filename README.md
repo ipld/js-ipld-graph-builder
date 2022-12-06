@@ -1,3 +1,5 @@
+**This project is no longer maintained or actively developed and has been archived. See https://ipld.io for information on recommended usage of IPLD in JavaScript.**
+
 # SYNOPSIS 
 [![NPM Package](https://img.shields.io/npm/v/ipld-graph-builder.svg?style=flat-square)](https://www.npmjs.org/package/ipld-graph-builder)
 [![Coverage Status](https://img.shields.io/coveralls/ipld/js-ipld-graph-builder.svg?style=flat-square)](https://coveralls.io/r/ipld/js-ipld-graph-builder)
