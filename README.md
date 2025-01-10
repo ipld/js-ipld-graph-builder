@@ -1,4 +1,4 @@
-**This project is no longer maintained or actively developed and has been archived. See https://ipld.io for information on recommended usage of IPLD in JavaScript.**
+**This project is no longer maintained or actively developed and has been archived. See https://ipld.io for information on recommended usage of IPLD in JavaScript. A rewrite of this library exists [here](https://jsr.io/@nullradix/ipld-cbor-graph-builder)**
 
 # SYNOPSIS 
 [![NPM Package](https://img.shields.io/npm/v/ipld-graph-builder.svg?style=flat-square)](https://www.npmjs.org/package/ipld-graph-builder)
